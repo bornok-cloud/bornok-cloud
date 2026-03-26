@@ -12,8 +12,8 @@
 <aside class="sidebar">
   <div class="sidebar-logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></div>
   <div class="sidebar-user">
-    <div class="u-av">JD</div>
-    <div><div class="u-name">Juan dela Cruz</div><div class="u-role">Job Seeker</div></div>
+    <div class="u-av">{{ user.avatar_initials }}</div>
+    <div><div class="u-name">{{ user.full_name }}</div><div class="u-role">{{ user.role|title }}</div></div>
   </div>
   <div class="nav-section">
     <div class="nsl">Menu</div>
@@ -41,54 +41,29 @@
     <button class="cf-btn">Interviews</button>
   </div>
   <div class="chat-items">
-    <div class="chat-item active unread">
-      <div class="ci-avatar">🏢<div class="ci-online"></div></div>
-      <div class="ci-info">
-        <div class="ci-row"><span class="ci-name">TechCorp Philippines</span><span class="ci-time">2m ago</span></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span class="ci-msg">Hi Juan! We'd like to invite you for...</span>
-          <span class="ci-badge">2</span>
+    {% if conversations %}
+      {% for conv in conversations %}
+      <div class="chat-item {% if loop.first %}active{% endif %} {% if conv.unread > 0 %}unread{% endif %}">
+        <div class="ci-avatar">{{ conv.contact.avatar_initials }}<div class="ci-online"></div></div>
+        <div class="ci-info">
+          <div class="ci-row"><span class="ci-name">{{ conv.contact.full_name }}</span><span class="ci-time">
+            {% if conv.last_message %}
+              {% set diff = (now - conv.last_message.created_at).total_seconds() %}
+              {% if diff < 60 %}now{% elif diff < 3600 %}{{ (diff/60)|int }}m ago{% elif diff < 86400 %}{{ (diff/3600)|int }}h ago{% else %}{{ conv.last_message.created_at.strftime('%b %d') }}{% endif %}
+            {% endif %}
+          </span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="ci-msg">{{ conv.last_message.content[:50] if conv.last_message else 'No messages' }}</span>
+            {% if conv.unread > 0 %}<span class="ci-badge">{{ conv.unread }}</span>{% endif %}
+          </div>
         </div>
       </div>
+      {% endfor %}
+    {% else %}
+    <div style="text-align:center;padding:40px;color:#999;">
+      <p>No conversations yet.</p>
     </div>
-    <div class="chat-item unread">
-      <div class="ci-avatar">🚀</div>
-      <div class="ci-info">
-        <div class="ci-row"><span class="ci-name">StartupHub HR</span><span class="ci-time">1h ago</span></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span class="ci-msg">Thank you for applying! We've reviewed...</span>
-          <span class="ci-badge">1</span>
-        </div>
-      </div>
-    </div>
-    <div class="chat-item">
-      <div class="ci-avatar">💡</div>
-      <div class="ci-info">
-        <div class="ci-row"><span class="ci-name">Analytics PH</span><span class="ci-time">Yesterday</span></div>
-        <div><span class="ci-msg">Great! We'll send you the interview details</span></div>
-      </div>
-    </div>
-    <div class="chat-item">
-      <div class="ci-avatar">📊</div>
-      <div class="ci-info">
-        <div class="ci-row"><span class="ci-name">FinGroup Recruiter</span><span class="ci-time">Mar 3</span></div>
-        <div><span class="ci-msg">We regret to inform you that...</span></div>
-      </div>
-    </div>
-    <div class="chat-item">
-      <div class="ci-avatar">☁️</div>
-      <div class="ci-info">
-        <div class="ci-row"><span class="ci-name">CloudSync PH</span><span class="ci-time">Mar 2</span></div>
-        <div><span class="ci-msg">Thanks for your interest! Can you share...</span></div>
-      </div>
-    </div>
-    <div class="chat-item">
-      <div class="ci-avatar">🏦</div>
-      <div class="ci-info">
-        <div class="ci-row"><span class="ci-name">BancoPH HR</span><span class="ci-time">Feb 28</span></div>
-        <div><span class="ci-msg">Interview scheduled for March 10 at 2PM</span></div>
-      </div>
-    </div>
+    {% endif %}
   </div>
 </div>
 

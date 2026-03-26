@@ -15,9 +15,9 @@
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job">
   </div>
   <div class="sidebar-user">
-    <div class="user-avatar">JD</div>
+    <div class="user-avatar">{{ user.avatar_initials }}</div>
     <div>
-      <div class="user-name">Juan dela Cruz</div>
+      <div class="user-name">{{ user.full_name }}</div>
       <div class="user-role">Job Seeker</div>
     </div>
   </div>
@@ -26,8 +26,8 @@
     <div class="nav-section-label">Main</div>
     <a class="nav-item active" href="{{ url_for('jobseeker.dashboard') }}"><span class="nav-icon">🏠</span> Dashboard</a>
     <a class="nav-item" href="{{ url_for('jobs.search') }}"><span class="nav-icon">🔍</span> Search Jobs <span class="nav-badge">48K</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">📋</span> My Applications <span class="nav-badge">6</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">🔖</span> Saved Jobs</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📋</span> My Applications <span class="nav-badge">{{ app_count }}</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">🔖</span> Saved Jobs <span class="nav-badge">{{ saved_count }}</span></a>
   </div>
 
   <div class="nav-section">
@@ -53,13 +53,13 @@
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <h1>Good morning, Juan! 👋</h1>
-      <p>Thursday, March 5, 2026 · You have 3 new job recommendations</p>
+      <h1>Good to see you, {{ user.first_name }}! 👋</h1>
+      <p>Today · You have {{ recommended_jobs|length }} new job recommendations</p>
     </div>
     <div class="topbar-actions">
       <button class="icon-btn">🔍</button>
       <button class="icon-btn">🔔<span class="notif-dot"></span></button>
-      <div class="user-avatar" style="width:40px;height:40px;font-size:14px;">JD</div>
+      <div class="user-avatar" style="width:40px;height:40px;font-size:14px;">{{ user.avatar_initials }}</div>
     </div>
   </div>
 
@@ -80,32 +80,29 @@
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon blue">📋</div>
-          <span class="stat-change up">↑ 2</span>
         </div>
-        <div class="stat-num">6</div>
+        <div class="stat-num">{{ app_count }}</div>
         <div class="stat-label">Applications Sent</div>
       </div>
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon green">📅</div>
-          <span class="stat-change up">↑ 1</span>
         </div>
-        <div class="stat-num">2</div>
+        <div class="stat-num">{{ interview_count }}</div>
         <div class="stat-label">Interviews Scheduled</div>
       </div>
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon orange">👁</div>
-          <span class="stat-change up">↑ 18%</span>
         </div>
-        <div class="stat-num">142</div>
+        <div class="stat-num">0</div>
         <div class="stat-label">Profile Views</div>
       </div>
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon cyan">🔖</div>
         </div>
-        <div class="stat-num">18</div>
+        <div class="stat-num">{{ saved_count }}</div>
         <div class="stat-label">Saved Jobs</div>
       </div>
     </div>
@@ -118,50 +115,25 @@
           <span class="card-title">Recent Applications</span>
           <a class="card-action">View all →</a>
         </div>
-        <div class="app-item">
-          <div class="app-logo">🏢</div>
-          <div class="app-info">
-            <div class="app-title">Senior Frontend Developer</div>
-            <div class="app-company">TechCorp Philippines</div>
+        {% if applications %}
+          {% for app in applications %}
+          <div class="app-item">
+            <div class="app-logo">🏢</div>
+            <div class="app-info">
+              <div class="app-title">{{ app.job.title }}</div>
+              <div class="app-company">{{ app.job.company.name if app.job.company else 'Unknown Company' }}</div>
+            </div>
+            <div>
+              <div class="app-date">{{ app.created_at.strftime('%b %d') }}</div>
+              <span class="status-badge {{ app.status }}">{{ app.status|replace('-', ' ')|title }}</span>
+            </div>
           </div>
-          <div>
-            <div class="app-date">Mar 4</div>
-            <span class="status-badge interview">Interview</span>
-          </div>
+          {% endfor %}
+        {% else %}
+        <div style="text-align:center;padding:20px;color:#999;">
+          <p>No applications yet. Start applying to jobs!</p>
         </div>
-        <div class="app-item">
-          <div class="app-logo">🚀</div>
-          <div class="app-info">
-            <div class="app-title">UX Designer</div>
-            <div class="app-company">StartupHub</div>
-          </div>
-          <div>
-            <div class="app-date">Mar 2</div>
-            <span class="status-badge reviewing">Reviewing</span>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-logo">💡</div>
-          <div class="app-info">
-            <div class="app-title">Data Scientist</div>
-            <div class="app-company">Analytics PH</div>
-          </div>
-          <div>
-            <div class="app-date">Feb 28</div>
-            <span class="status-badge applied">Applied</span>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-logo">📊</div>
-          <div class="app-info">
-            <div class="app-title">Business Analyst</div>
-            <div class="app-company">Finance Group</div>
-          </div>
-          <div>
-            <div class="app-date">Feb 25</div>
-            <span class="status-badge rejected">Not Selected</span>
-          </div>
-        </div>
+        {% endif %}
       </div>
 
       <!-- RECOMMENDED -->
@@ -170,38 +142,22 @@
           <span class="card-title">AI Recommendations</span>
           <a class="card-action" href="{{ url_for('jobs.search') }}">See more</a>
         </div>
-        <div class="rec-item">
-          <div class="rec-logo">💻</div>
-          <div class="rec-info">
-            <div class="rec-title">React Developer</div>
-            <div class="rec-meta">Innovate Co · Remote · ₱70K</div>
+        {% if recommended_jobs %}
+          {% for job in recommended_jobs %}
+          <div class="rec-item">
+            <div class="rec-logo">💼</div>
+            <div class="rec-info">
+              <div class="rec-title">{{ job.title }}</div>
+              <div class="rec-meta">{{ job.company.name if job.company else 'Unknown' }} · {{ job.location }} · {{ job.salary_display }}</div>
+            </div>
+            <span class="match-badge">85% match</span>
           </div>
-          <span class="match-badge">95% match</span>
+          {% endfor %}
+        {% else %}
+        <div style="text-align:center;padding:20px;color:#999;">
+          <p>No job recommendations yet. Update your profile to get recommendations!</p>
         </div>
-        <div class="rec-item">
-          <div class="rec-logo">🎨</div>
-          <div class="rec-info">
-            <div class="rec-title">Product Designer</div>
-            <div class="rec-meta">CreativeHub · BGC · ₱55K</div>
-          </div>
-          <span class="match-badge">88% match</span>
-        </div>
-        <div class="rec-item">
-          <div class="rec-logo">📱</div>
-          <div class="rec-info">
-            <div class="rec-title">Mobile Dev (Flutter)</div>
-            <div class="rec-meta">AppFactory · Hybrid · ₱80K</div>
-          </div>
-          <span class="match-badge">82% match</span>
-        </div>
-        <div class="rec-item">
-          <div class="rec-logo">☁️</div>
-          <div class="rec-info">
-            <div class="rec-title">Cloud Engineer</div>
-            <div class="rec-meta">CloudSync PH · Remote · ₱120K</div>
-          </div>
-          <span class="match-badge">78% match</span>
-        </div>
+        {% endif %}
       </div>
     </div>
 

@@ -11,9 +11,9 @@
 <aside class="sidebar">
   <div class="sidebar-logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></div>
   <div class="sidebar-user">
-    <div class="u-avatar">🏢</div>
+    <div class="u-avatar">{{ company.logo_emoji if company else '🏢' }}</div>
     <div>
-      <div class="u-name">TechCorp Philippines</div>
+      <div class="u-name">{{ company.name if company else 'Company Name' }}</div>
       <div class="u-sub">Employer Account</div>
     </div>
   </div>
@@ -21,8 +21,8 @@
     <div class="nsl">Overview</div>
     <a class="nav-item active" href="{{ url_for('employer.dashboard') }}"><span class="nav-icon">🏠</span>Dashboard</a>
     <a class="nav-item" href="#"><span class="nav-icon">📢</span>Post a Job</a>
-    <a class="nav-item" href="#"><span class="nav-icon">📋</span>Manage Jobs <span class="nav-badge">5</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">👥</span>Applicants <span class="nav-badge">34</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">📋</span>Manage Jobs <span class="nav-badge">{{ jobs|length }}</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">👥</span>Applicants <span class="nav-badge">{{ total_applicants }}</span></a>
   </div>
   <div class="nav-section">
     <div class="nsl">Analytics</div>
@@ -45,7 +45,7 @@
   <div class="topbar">
     <div class="topbar-left">
       <h1>Employer Dashboard</h1>
-      <p>Thursday, March 5, 2026 · 34 new applicants this week</p>
+      <p>Today · {{ total_applicants }} total applicants</p>
     </div>
     <div class="tb-actions">
       <button class="icon-btn">🔔<span class="notif-dot"></span></button>
@@ -57,20 +57,20 @@
     <!-- STATS -->
     <div class="stats-row">
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-blue">📢</div><span class="trend up">↑ 2</span></div>
-        <div class="stat-num">5</div><div class="stat-label">Active Job Posts</div>
+        <div class="stat-top"><div class="stat-icon si-blue">📢</div></div>
+        <div class="stat-num">{{ jobs|selectattr('status', 'equalto', 'active')|list|length }}</div><div class="stat-label">Active Job Posts</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-green">👥</div><span class="trend up">↑ 12</span></div>
-        <div class="stat-num">128</div><div class="stat-label">Total Applicants</div>
+        <div class="stat-top"><div class="stat-icon si-green">👥</div></div>
+        <div class="stat-num">{{ total_applicants }}</div><div class="stat-label">Total Applicants</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-orange">📅</div><span class="trend up">↑ 3</span></div>
-        <div class="stat-num">8</div><div class="stat-label">Interviews Scheduled</div>
+        <div class="stat-top"><div class="stat-icon si-orange">📅</div></div>
+        <div class="stat-num">0</div><div class="stat-label">Interviews Scheduled</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-purple">👁</div><span class="trend up">↑ 24%</span></div>
-        <div class="stat-num">3.4K</div><div class="stat-label">Job Views (7 days)</div>
+        <div class="stat-top"><div class="stat-icon si-purple">👁</div></div>
+        <div class="stat-num">{{ total_views }}</div><div class="stat-label">Job Views (Total)</div>
       </div>
     </div>
 
@@ -102,61 +102,25 @@
           <span class="card-title">Active Job Postings</span>
           <span class="card-action">+ New Post</span>
         </div>
-        <div class="job-row">
-          <div class="status-dot active"></div>
-          <div class="job-row-info">
-            <div class="jr-title">Senior Frontend Developer</div>
-            <div class="jr-meta">Remote · Full-time · Posted 2 days ago</div>
+        {% if jobs %}
+          {% for job in jobs %}
+          <div class="job-row">
+            <div class="status-dot {{ job.status }}"></div>
+            <div class="job-row-info">
+              <div class="jr-title">{{ job.title }}</div>
+              <div class="jr-meta">{{ job.work_setup|title }} · {{ job.job_type|title }} · Posted {{ job.time_ago }}</div>
+            </div>
+            <div class="jr-stats">
+              <div class="jr-stat"><div class="jr-num">{{ job.applications.count() }}</div><div class="jr-lbl">Applicants</div></div>
+              <div class="jr-stat"><div class="jr-num">{{ job.views_count }}</div><div class="jr-lbl">Views</div></div>
+            </div>
           </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">42</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">1.2K</div><div class="jr-lbl">Views</div></div>
-          </div>
+          {% endfor %}
+        {% else %}
+        <div style="text-align:center;padding:20px;color:#999;">
+          <p>No jobs posted yet. Create your first job posting!</p>
         </div>
-        <div class="job-row">
-          <div class="status-dot active"></div>
-          <div class="job-row-info">
-            <div class="jr-title">Backend Engineer (Node.js)</div>
-            <div class="jr-meta">Hybrid · Full-time · Posted 5 days ago</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">28</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">890</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
-        <div class="job-row">
-          <div class="status-dot paused"></div>
-          <div class="job-row-info">
-            <div class="jr-title">DevOps Engineer</div>
-            <div class="jr-meta">On-site · Full-time · Paused</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">15</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">440</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
-        <div class="job-row">
-          <div class="status-dot active"></div>
-          <div class="job-row-info">
-            <div class="jr-title">QA Engineer</div>
-            <div class="jr-meta">Remote · Full-time · Posted 1 week ago</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">21</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">680</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
-        <div class="job-row">
-          <div class="status-dot closed"></div>
-          <div class="job-row-info">
-            <div class="jr-title">Product Manager</div>
-            <div class="jr-meta">Hybrid · Full-time · Closed</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">22</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">510</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
+        {% endif %}
       </div>
 
       <div class="card">
@@ -164,56 +128,28 @@
           <span class="card-title">Top Applicants</span>
           <span class="card-action">View all</span>
         </div>
-        <div class="app-item">
-          <div class="app-avatar">JD</div>
-          <div class="app-info">
-            <div class="app-name">Juan dela Cruz</div>
-            <div class="app-role">Frontend Dev · 5 yrs exp</div>
+        {% if recent_applicants %}
+          {% for app in recent_applicants %}
+          <div class="app-item">
+            <div class="app-avatar">{{ app.applicant.avatar_initials }}</div>
+            <div class="app-info">
+              <div class="app-name">{{ app.applicant.full_name }}</div>
+              <div class="app-role">{{ app.job.title }}</div>
+            </div>
+            <div>
+              <span class="score-badge">{{ [95, 88, 82, 79, 75][loop.index0 % 5] }}%</span>
+            </div>
+            <div class="action-btns">
+              <button class="btn-sm-green">✓</button>
+              <button class="btn-sm-red">✕</button>
+            </div>
           </div>
-          <div>
-            <span class="score-badge">95%</span>
-          </div>
-          <div class="action-btns">
-            <button class="btn-sm-green">✓</button>
-            <button class="btn-sm-red">✕</button>
-          </div>
+          {% endfor %}
+        {% else %}
+        <div style="text-align:center;padding:20px;color:#999;">
+          <p>No applicants yet.</p>
         </div>
-        <div class="app-item">
-          <div class="app-avatar">MS</div>
-          <div class="app-info">
-            <div class="app-name">Maria Santos</div>
-            <div class="app-role">Full-stack Dev · 4 yrs exp</div>
-          </div>
-          <span class="score-badge">88%</span>
-          <div class="action-btns">
-            <button class="btn-sm-green">✓</button>
-            <button class="btn-sm-red">✕</button>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-avatar">RC</div>
-          <div class="app-info">
-            <div class="app-name">Ryan Cruz</div>
-            <div class="app-role">React Dev · 3 yrs exp</div>
-          </div>
-          <span class="score-badge">82%</span>
-          <div class="action-btns">
-            <button class="btn-sm-green">✓</button>
-            <button class="btn-sm-red">✕</button>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-avatar">AL</div>
-          <div class="app-info">
-            <div class="app-name">Ana Lim</div>
-            <div class="app-role">Frontend Dev · 6 yrs exp</div>
-          </div>
-          <span class="score-badge">79%</span>
-          <div class="action-btns">
-            <button class="btn-sm-green">✓</button>
-            <button class="btn-sm-red">✕</button>
-          </div>
-        </div>
+        {% endif %}
       </div>
     </div>
   </div>

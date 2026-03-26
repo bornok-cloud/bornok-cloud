@@ -112,170 +112,91 @@
       </select>
     </div>
 
+    {% if query or location %}
     <div class="active-filters">
-      <span class="active-tag">Full-time <button>×</button></span>
-      <span class="active-tag">Technology <button>×</button></span>
-      <span class="active-tag">Metro Manila <button>×</button></span>
+      {% if query %}<span class="active-tag">{{ query }} <button>×</button></span>{% endif %}
+      {% if location %}<span class="active-tag">{{ location }} <button>×</button></span>{% endif %}
     </div>
+    {% endif %}
 
     <!-- JOB CARDS -->
-    <div class="job-card featured">
-      <div class="co-logo">🏢</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Senior Frontend Developer</h3>
-            <p>TechCorp Philippines · Makati City</p>
+    {% if jobs %}
+      {% for job in jobs %}
+      <div class="job-card {% if job.is_featured %}featured{% endif %}">
+        <div class="co-logo">🏢</div>
+        <div class="job-main">
+          <div class="job-top-row">
+            <div class="job-title-wrap">
+              <h3>{{ job.title }}</h3>
+              <p>{{ job.company.name if job.company else 'Unknown Company' }} · {{ job.location }}</p>
+            </div>
+            <div class="job-badges">
+              {% if job.is_featured %}<span class="badge featured">Featured</span>{% endif %}
+              {% if job.is_urgent %}<span class="badge urgent">Urgent</span>{% else %}<span class="badge new">{{ job.time_ago }}</span>{% endif %}
+            </div>
           </div>
-          <div class="job-badges"><span class="badge featured">Featured</span><span class="badge new">AI 95%</span></div>
-        </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 Remote</span>
-          <span class="jmeta">🎓 5+ years</span>
-          <span class="jmeta">👥 500+ employees</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">React.js</span><span class="jtag">TypeScript</span><span class="jtag">Next.js</span><span class="jtag">GraphQL</span>
-        </div>
-      </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱80K–120K</div>
-          <div class="job-posted">2 days ago</div>
-        </div>
-        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
-
-    <div class="job-card">
-      <div class="co-logo">🚀</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Product Designer (UX/UI)</h3>
-            <p>StartupHub Inc. · BGC, Taguig</p>
+          <div class="job-meta-row">
+            <span class="jmeta">⏰ {{ job.job_type|replace('-', ' ')|title }}</span>
+            <span class="jmeta">📍 {{ job.work_setup|title }}</span>
+            <span class="jmeta">🎓 {{ job.experience_level|title }}</span>
+            {% if job.company %}<span class="jmeta">👥 {{ job.company.employee_count or 'Unknown' }}</span>{% endif %}
           </div>
-          <div class="job-badges"><span class="badge new">New</span></div>
-        </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 Hybrid</span>
-          <span class="jmeta">🎓 2-3 years</span>
-          <span class="jmeta">👥 100–200</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">Figma</span><span class="jtag">Prototyping</span><span class="jtag">Design Systems</span>
-        </div>
-      </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱45K–65K</div>
-          <div class="job-posted">1 day ago</div>
-        </div>
-        <button class="apply-btn">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
-
-    <div class="job-card">
-      <div class="co-logo">💡</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Data Scientist</h3>
-            <p>Analytics PH · Pasig City</p>
+          <div class="job-tags">
+            {% if job.skills_required %}
+              {% for skill in job.skills_required.split(',')[:4] %}
+              <span class="jtag">{{ skill.strip() }}</span>
+              {% endfor %}
+            {% endif %}
           </div>
-          <div class="job-badges"><span class="badge featured">Featured</span><span class="badge urgent">Urgent</span></div>
         </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 On-site</span>
-          <span class="jmeta">🎓 3-5 years</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">Python</span><span class="jtag">TensorFlow</span><span class="jtag">SQL</span><span class="jtag">Power BI</span>
-        </div>
-      </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱100K–160K</div>
-          <div class="job-posted">3 days ago</div>
-        </div>
-        <button class="apply-btn">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
-
-    <div class="job-card">
-      <div class="co-logo">📱</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Mobile Developer (Flutter)</h3>
-            <p>AppFactory PH · Cebu City</p>
+        <div class="job-right">
+          <div>
+            <div class="job-salary">{{ job.salary_display }}</div>
+            <div class="job-posted">{{ job.time_ago }}</div>
           </div>
-          <div class="job-badges"><span class="badge new">New</span></div>
-        </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 Remote</span>
-          <span class="jmeta">🎓 2+ years</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">Flutter</span><span class="jtag">Dart</span><span class="jtag">Firebase</span><span class="jtag">REST APIs</span>
+          <form method="POST" action="{{ url_for('jobs.apply', job_id=job.id) }}" style="display:inline;">
+            <button class="apply-btn">Apply Now</button>
+          </form>
+          <form method="POST" action="{{ url_for('jobs.save_job', job_id=job.id) }}" style="display:inline;">
+            <button class="save-btn">🔖</button>
+          </form>
         </div>
       </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱60K–90K</div>
-          <div class="job-posted">Today</div>
-        </div>
-        <button class="apply-btn">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
+      {% endfor %}
+    {% else %}
+    <div style="text-align:center;padding:40px;color:#999;">
+      <p>No jobs found matching your criteria. Try adjusting your filters.</p>
     </div>
-
-    <div class="job-card">
-      <div class="co-logo">☁️</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Cloud Solutions Architect</h3>
-            <p>CloudSync Philippines · Ortigas Center</p>
-          </div>
-          <div class="job-badges"><span class="badge featured">Featured</span></div>
-        </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 Hybrid</span>
-          <span class="jmeta">🎓 7+ years</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">AWS</span><span class="jtag">Azure</span><span class="jtag">Terraform</span><span class="jtag">Kubernetes</span>
-        </div>
-      </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱150K–200K</div>
-          <div class="job-posted">5 days ago</div>
-        </div>
-        <button class="apply-btn">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
+    {% endif %}
 
     <!-- PAGINATION -->
+    {% if pagination %}
     <div class="pagination">
-      <button class="page-btn">←</button>
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <button class="page-btn">...</button>
-      <button class="page-btn">24</button>
-      <button class="page-btn">→</button>
+      {% if pagination.has_prev %}
+      <a href="{{ url_for('jobs.search', q=query, location=location, page=1) }}" class="page-btn">←</a>
+      {% else %}
+      <button class="page-btn" disabled>←</button>
+      {% endif %}
+      
+      {% for page_num in pagination.iter_pages(left_edge=1, left_margin=2, right_margin=2) %}
+        {% if page_num %}
+          {% if page_num == pagination.page %}
+          <button class="page-btn active">{{ page_num }}</button>
+          {% else %}
+          <a href="{{ url_for('jobs.search', q=query, location=location, page=page_num) }}" class="page-btn">{{ page_num }}</a>
+          {% endif %}
+        {% else %}
+        <button class="page-btn">...</button>
+        {% endif %}
+      {% endfor %}
+      
+      {% if pagination.has_next %}
+      <a href="{{ url_for('jobs.search', q=query, location=location, page=pagination.next_num) }}" class="page-btn">→</a>
+      {% else %}
+      <button class="page-btn" disabled>→</button>
+      {% endif %}
     </div>
+    {% endif %}
   </div>
 </div>
 
