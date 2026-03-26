@@ -1,0 +1,106 @@
+:root {
+    --blue-dark: #0A1628; --blue-primary: #0052CC; --blue-mid: #0077B6;
+    --blue-light: #00B4D8; --cyan: #48CAE4; --white: #FFFFFF;
+    --off-white: #F0F8FF; --gray: #6B7A99; --light-gray: #E8F0FB;
+    --green: #22C55E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #F4F8FF; color: var(--blue-dark); }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: white; padding: 16px 48px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--light-gray); box-shadow: 0 2px 12px rgba(0,82,204,0.06);
+  }
+  nav img { height: 38px; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-right a { color: var(--blue-dark); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .btn-primary { padding: 10px 22px; background: linear-gradient(135deg, var(--blue-primary), var(--blue-light)); color: white; border: none; border-radius: 50px; font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; }
+
+  /* SEARCH HEADER */
+  .search-header {
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-primary));
+    padding: 48px; position: relative; overflow: hidden;
+  }
+  .search-header::after { content:''; position:absolute;bottom:-1px;left:0;right:0;height:48px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 48'%3E%3Cpath fill='%23F4F8FF' d='M0,24 C360,48 1080,0 1440,24 L1440,48 L0,48 Z'/%3C/svg%3E") no-repeat bottom/cover; }
+  .search-header h1 { font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:white;margin-bottom:8px; }
+  .search-header p { font-size:15px;color:rgba(255,255,255,0.7);margin-bottom:28px; }
+  .search-bar {
+    display:flex;align-items:center;background:white;border-radius:16px;padding:8px 8px 8px 20px;
+    max-width:720px;box-shadow:0 16px 40px rgba(0,0,0,0.2); gap:12px;
+  }
+  .search-bar input { flex:1;border:none;outline:none;font-size:15px;color:var(--blue-dark);font-family:'DM Sans',sans-serif; }
+  .sb-divider { width:1px;height:28px;background:var(--light-gray); }
+  .search-bar select { border:none;outline:none;font-size:14px;color:var(--gray);background:transparent;font-family:'DM Sans',sans-serif; }
+  .sb-btn { padding:12px 28px;background:linear-gradient(135deg,var(--blue-primary),var(--blue-light));color:white;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer; }
+
+  /* LAYOUT */
+  .page-layout { display:flex;gap:28px;padding:36px 48px;max-width:1400px;margin:0 auto; }
+
+  /* FILTER SIDEBAR */
+  .filter-sidebar { width:280px;flex-shrink:0; }
+  .filter-card { background:white;border-radius:20px;padding:24px;margin-bottom:20px;border:1px solid rgba(0,82,204,0.06); }
+  .filter-title { font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--blue-dark);margin-bottom:20px; }
+  .filter-section { margin-bottom:24px; }
+  .filter-section-label { font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px; }
+  .checkbox-item { display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer; }
+  .checkbox-item input { accent-color:var(--blue-primary); }
+  .checkbox-item label { font-size:14px;color:var(--blue-dark);cursor:pointer; }
+  .checkbox-item span { margin-left:auto;font-size:12px;color:var(--gray); }
+  .range-slider { width:100%; accent-color:var(--blue-primary); }
+  .range-labels { display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-top:6px; }
+  .tag-filters { display:flex;flex-wrap:wrap;gap:8px; }
+  .tag-filter { padding:6px 14px;border-radius:50px;font-size:13px;border:1.5px solid var(--light-gray);color:var(--gray);cursor:pointer;transition:all 0.2s; }
+  .tag-filter:hover,.tag-filter.active { border-color:var(--blue-primary);color:var(--blue-primary);background:rgba(0,82,204,0.06); }
+  .apply-filters { width:100%;padding:13px;background:linear-gradient(135deg,var(--blue-primary),var(--blue-light));color:white;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-top:4px; }
+  .clear-filters { width:100%;padding:11px;background:transparent;color:var(--gray);border:1.5px solid var(--light-gray);border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;margin-top:10px; }
+
+  /* RESULTS */
+  .results-area { flex:1; }
+  .results-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:20px; }
+  .results-count { font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--blue-dark); }
+  .results-count span { color:var(--blue-primary); }
+  .sort-select { padding:10px 16px;border:1.5px solid var(--light-gray);border-radius:10px;font-size:14px;color:var(--blue-dark);background:white;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer; }
+  .active-filters { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px; }
+  .active-tag { display:flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(0,82,204,0.08);color:var(--blue-primary);border-radius:50px;font-size:13px;font-weight:600; }
+  .active-tag button { background:none;border:none;cursor:pointer;color:var(--blue-primary);font-size:14px;line-height:1; }
+
+  /* JOB CARDS */
+  .job-card {
+    background:white;border-radius:20px;padding:26px;margin-bottom:16px;
+    border:1.5px solid transparent;cursor:pointer;transition:all 0.25s;
+    display:flex;align-items:center;gap:20px;
+  }
+  .job-card:hover { border-color:var(--blue-primary);box-shadow:0 10px 30px rgba(0,82,204,0.1);transform:translateY(-2px); }
+  .job-card.featured { border-color:rgba(0,82,204,0.2);background:linear-gradient(135deg,#FAFCFF,white); }
+  .co-logo { width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#E8F0FB,#C7D9F8);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0; }
+  .job-main { flex:1; }
+  .job-top-row { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px; }
+  .job-title-wrap h3 { font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--blue-dark);margin-bottom:4px; }
+  .job-title-wrap p { font-size:14px;color:var(--gray); }
+  .job-badges { display:flex;gap:8px;flex-wrap:wrap; }
+  .badge { padding:4px 12px;border-radius:50px;font-size:12px;font-weight:600; }
+  .badge.new { background:#E0F2FE;color:#0369A1; }
+  .badge.featured { background:#FEF9C3;color:#854D0E; }
+  .badge.urgent { background:#FEE2E2;color:#991B1B; }
+  .job-meta-row { display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px; }
+  .jmeta { display:flex;align-items:center;gap:5px;font-size:13px;color:var(--gray); }
+  .job-tags { display:flex;gap:8px;flex-wrap:wrap; }
+  .jtag { padding:4px 12px;background:var(--off-white);border-radius:50px;font-size:12px;color:var(--blue-dark);font-weight:500; }
+  .job-right { display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex-shrink:0; }
+  .job-salary { font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--blue-primary); }
+  .job-posted { font-size:12px;color:var(--gray); }
+  .apply-btn { padding:10px 22px;background:linear-gradient(135deg,var(--blue-primary),var(--blue-light));color:white;border:none;border-radius:50px;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s; }
+  .apply-btn:hover { transform:scale(1.06); }
+  .save-btn { width:36px;height:36px;border-radius:10px;background:var(--off-white);border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s; }
+  .save-btn:hover { background:var(--light-gray); }
+
+  /* PAGINATION */
+  .pagination { display:flex;align-items:center;justify-content:center;gap:8px;margin-top:32px; }
+  .page-btn { width:40px;height:40px;border-radius:10px;border:1.5px solid var(--light-gray);background:white;cursor:pointer;font-size:14px;font-weight:600;color:var(--gray);display:flex;align-items:center;justify-content:center;transition:all 0.2s; }
+  .page-btn:hover,.page-btn.active { background:var(--blue-primary);color:white;border-color:var(--blue-primary); }
+
+  @media(max-width:900px) {
+    .filter-sidebar { display:none; }
+    .page-layout { padding:24px; }
+  }

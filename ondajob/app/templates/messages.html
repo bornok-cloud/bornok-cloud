@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages – Onda Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}">
+</head>
+<body>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></div>
+  <div class="sidebar-user">
+    <div class="u-av">JD</div>
+    <div><div class="u-name">Juan dela Cruz</div><div class="u-role">Job Seeker</div></div>
+  </div>
+  <div class="nav-section">
+    <div class="nsl">Menu</div>
+    <a class="nav-item" href="{{ url_for('jobseeker.dashboard') }}"><span>🏠</span>Dashboard</a>
+    <a class="nav-item" href="{{ url_for('jobs.search') }}"><span>🔍</span>Search Jobs</a>
+    <a class="nav-item" href="#"><span>📋</span>Applications</a>
+    <a class="nav-item active" href="{{ url_for('messages.inbox') }}"><span>💬</span>Messages <span class="nav-badge">3</span></a>
+    <a class="nav-item" href="#"><span>📅</span>Interviews</a>
+    <a class="nav-item" href="{{ url_for('resume.builder') }}"><span>📄</span>Resume</a>
+  </div>
+  <div class="sidebar-footer">
+    <a class="nav-item" href="{{ url_for('main.index') }}"><span>🚪</span>Log Out</a>
+  </div>
+</aside>
+
+<!-- CHAT LIST -->
+<div class="chat-list">
+  <div class="cl-header">
+    <div class="cl-title">Messages</div>
+    <div class="cl-search"><span>🔍</span><input type="text" placeholder="Search conversations..."></div>
+  </div>
+  <div class="cl-filter">
+    <button class="cf-btn active">All</button>
+    <button class="cf-btn">Unread</button>
+    <button class="cf-btn">Interviews</button>
+  </div>
+  <div class="chat-items">
+    <div class="chat-item active unread">
+      <div class="ci-avatar">🏢<div class="ci-online"></div></div>
+      <div class="ci-info">
+        <div class="ci-row"><span class="ci-name">TechCorp Philippines</span><span class="ci-time">2m ago</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="ci-msg">Hi Juan! We'd like to invite you for...</span>
+          <span class="ci-badge">2</span>
+        </div>
+      </div>
+    </div>
+    <div class="chat-item unread">
+      <div class="ci-avatar">🚀</div>
+      <div class="ci-info">
+        <div class="ci-row"><span class="ci-name">StartupHub HR</span><span class="ci-time">1h ago</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="ci-msg">Thank you for applying! We've reviewed...</span>
+          <span class="ci-badge">1</span>
+        </div>
+      </div>
+    </div>
+    <div class="chat-item">
+      <div class="ci-avatar">💡</div>
+      <div class="ci-info">
+        <div class="ci-row"><span class="ci-name">Analytics PH</span><span class="ci-time">Yesterday</span></div>
+        <div><span class="ci-msg">Great! We'll send you the interview details</span></div>
+      </div>
+    </div>
+    <div class="chat-item">
+      <div class="ci-avatar">📊</div>
+      <div class="ci-info">
+        <div class="ci-row"><span class="ci-name">FinGroup Recruiter</span><span class="ci-time">Mar 3</span></div>
+        <div><span class="ci-msg">We regret to inform you that...</span></div>
+      </div>
+    </div>
+    <div class="chat-item">
+      <div class="ci-avatar">☁️</div>
+      <div class="ci-info">
+        <div class="ci-row"><span class="ci-name">CloudSync PH</span><span class="ci-time">Mar 2</span></div>
+        <div><span class="ci-msg">Thanks for your interest! Can you share...</span></div>
+      </div>
+    </div>
+    <div class="chat-item">
+      <div class="ci-avatar">🏦</div>
+      <div class="ci-info">
+        <div class="ci-row"><span class="ci-name">BancoPH HR</span><span class="ci-time">Feb 28</span></div>
+        <div><span class="ci-msg">Interview scheduled for March 10 at 2PM</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT WINDOW -->
+<div class="chat-window">
+  <div class="cw-header">
+    <div class="cw-av">🏢</div>
+    <div>
+      <div class="cw-name">TechCorp Philippines</div>
+      <div class="cw-status">Online</div>
+    </div>
+    <div class="cw-actions">
+      <button class="ca-btn">📞</button>
+      <button class="ca-btn">📅</button>
+      <button class="ca-btn">⋯</button>
+    </div>
+  </div>
+
+  <div class="interview-banner">
+    <div class="ib-icon">📅</div>
+    <div class="ib-text">
+      <h4>Interview Invitation Pending</h4>
+      <p>TechCorp has invited you for a technical interview — respond to confirm</p>
+    </div>
+    <button class="ib-btn">View Details</button>
+  </div>
+
+  <div class="messages-area" id="msgArea">
+    <div class="msg-date">Today, March 5, 2026</div>
+
+    <div class="msg-row">
+      <div class="msg-av">🏢</div>
+      <div>
+        <div class="msg-bubble">Hello Juan! Thanks for applying for the Senior Frontend Developer position at TechCorp Philippines. We've reviewed your resume and we're very impressed!</div>
+        <div class="msg-time">10:02 AM</div>
+      </div>
+    </div>
+
+    <div class="msg-row">
+      <div class="msg-av">🏢</div>
+      <div>
+        <div class="msg-bubble">We'd like to invite you for a technical interview. Would you be available this Friday, March 7, at 2:00 PM (PH time)?</div>
+        <div class="msg-time">10:04 AM</div>
+      </div>
+    </div>
+
+    <div class="msg-row mine">
+      <div class="msg-av">JD</div>
+      <div>
+        <div class="msg-bubble">Hi! Thank you so much for the opportunity. I'm very excited about the position at TechCorp!</div>
+        <div class="msg-time">10:12 AM ✓✓</div>
+      </div>
+    </div>
+
+    <div class="msg-row mine">
+      <div class="msg-av">JD</div>
+      <div>
+        <div class="msg-bubble">Friday, March 7 at 2:00 PM works perfectly for me. Should I prepare anything specific for the technical interview?</div>
+        <div class="msg-time">10:13 AM ✓✓</div>
+      </div>
+    </div>
+
+    <div class="msg-row">
+      <div class="msg-av">🏢</div>
+      <div>
+        <div class="msg-bubble">Great! Please expect a React/TypeScript coding challenge. Duration is about 1 hour followed by a 30-minute discussion with our tech lead.</div>
+        <div class="msg-time">10:28 AM</div>
+      </div>
+    </div>
+
+    <div class="msg-row">
+      <div class="msg-av">🏢</div>
+      <div>
+        <div class="msg-bubble">We'll send you the Zoom link and technical details via email. You can also check the interview status on your Onda Job dashboard. Looking forward to speaking with you! 🎉</div>
+        <div class="msg-time">10:29 AM</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="cta-wrap">
+      <textarea id="msgInput" placeholder="Write a message..." rows="1" onkeydown="sendOnEnter(event)"></textarea>
+      <div class="cta-actions">
+        <span class="cta-icon">📎</span>
+        <span class="cta-icon">😊</span>
+        <button class="send-btn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.chat-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.chat-item').forEach(x => x.classList.remove('active'));
+      item.classList.add('active');
+      item.classList.remove('unread');
+      const badge = item.querySelector('.ci-badge');
+      if (badge) badge.remove();
+    });
+  });
+  document.querySelectorAll('.cf-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.cf-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+  function sendMessage() {
+    const input = document.getElementById('msgInput');
+    if (!input.value.trim()) return;
+    const area = document.getElementById('msgArea');
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'});
+    const row = document.createElement('div');
+    row.className = 'msg-row mine';
+    row.innerHTML = `<div class="msg-av">JD</div><div><div class="msg-bubble">${input.value}</div><div class="msg-time">${time} ✓</div></div>`;
+    area.appendChild(row);
+    input.value = '';
+    area.scrollTop = area.scrollHeight;
+  }
+  function sendOnEnter(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+</script>
+</body>
+</html>

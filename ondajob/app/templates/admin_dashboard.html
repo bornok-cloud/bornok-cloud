@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard – Onda Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job">
+    <div class="admin-badge">ADMIN PANEL</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="u-av">SA</div>
+    <div>
+      <div class="u-name">Super Admin</div>
+      <div class="u-role">System Administrator</div>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nsl">Overview</div>
+    <a class="nav-item active" href="{{ url_for('admin.dashboard') }}"><span>🏠</span>Dashboard</a>
+    <a class="nav-item" href="{{ url_for('main.index') }}"><span>🌐</span>Homepage</a>
+  </div>
+  <div class="nav-section">
+    <div class="nsl">Management</div>
+    <a class="nav-item" href="#"><span>👥</span>All Users <span class="nav-badge">12</span></a>
+    <a class="nav-item" href="#"><span>🏢</span>Employers</a>
+    <a class="nav-item" href="#"><span>👤</span>Job Seekers</a>
+    <a class="nav-item" href="#"><span>📋</span>Manage Jobs <span class="nav-badge">5</span></a>
+    <a class="nav-item" href="#"><span>🚨</span>Reports <span class="nav-badge">3</span></a>
+  </div>
+  <div class="nav-section">
+    <div class="nsl">System</div>
+    <a class="nav-item" href="#"><span>📊</span>Analytics</a>
+    <a class="nav-item" href="#"><span>🔔</span>Notifications</a>
+    <a class="nav-item" href="#"><span>⚙️</span>Settings</a>
+    <a class="nav-item" href="#"><span>📜</span>Audit Log</a>
+  </div>
+  <div class="sidebar-footer">
+    <a class="nav-item" href="{{ url_for('auth.login') }}"><span>🚪</span>Log Out</a>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Admin Dashboard</h1>
+      <p>Thursday, March 5, 2026 · System Status: All services operational ✅</p>
+    </div>
+    <div class="tb-right">
+      <div class="search-wrap">
+        <span>🔍</span>
+        <input class="search-input" type="text" placeholder="Search users, jobs...">
+      </div>
+      <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+      <div class="u-av" style="width:38px;height:38px;font-size:13px;border-radius:10px;">SA</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="sc-top"><div class="sc-icon si-b">👥</div><span class="sc-change up">↑ 8%</span></div>
+        <div class="sc-num">24,810</div><div class="sc-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top"><div class="sc-icon si-g">🏢</div><span class="sc-change up">↑ 5%</span></div>
+        <div class="sc-num">1,240</div><div class="sc-label">Employers</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top"><div class="sc-icon si-o">📋</div><span class="sc-change up">↑ 12%</span></div>
+        <div class="sc-num">48,240</div><div class="sc-label">Active Jobs</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top"><div class="sc-icon si-p">📨</div><span class="sc-change up">↑ 18%</span></div>
+        <div class="sc-num">128K</div><div class="sc-label">Applications</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top"><div class="sc-icon si-r">🚨</div><span class="sc-change down">+3</span></div>
+        <div class="sc-num">7</div><div class="sc-label">Pending Reports</div>
+      </div>
+    </div>
+
+    <!-- USERS TABLE + DONUT -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="ch">
+          <span class="ct">Recent Registrations</span>
+          <span class="ca">View all users →</span>
+        </div>
+        <table>
+          <tr><th>User</th><th>Role</th><th>Joined</th><th>Status</th><th></th></tr>
+          <tr>
+            <td><div class="avatar-cell"><div class="tbl-avatar">JD</div><div><div class="tbl-name">Juan dela Cruz</div><div class="tbl-sub">juan@email.com</div></div></div></td>
+            <td><span class="badge badge-new">Seeker</span></td>
+            <td style="color:var(--gray);font-size:12px">Mar 5</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><span class="tbl-action">View</span></td>
+          </tr>
+          <tr>
+            <td><div class="avatar-cell"><div class="tbl-avatar">TC</div><div><div class="tbl-name">TechCorp PH</div><div class="tbl-sub">hr@techcorp.ph</div></div></div></td>
+            <td><span class="badge badge-new">Employer</span></td>
+            <td style="color:var(--gray);font-size:12px">Mar 4</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td><span class="tbl-action">Review</span></td>
+          </tr>
+          <tr>
+            <td><div class="avatar-cell"><div class="tbl-avatar">MS</div><div><div class="tbl-name">Maria Santos</div><div class="tbl-sub">maria@email.com</div></div></div></td>
+            <td><span class="badge badge-new">Seeker</span></td>
+            <td style="color:var(--gray);font-size:12px">Mar 4</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><span class="tbl-action">View</span></td>
+          </tr>
+          <tr>
+            <td><div class="avatar-cell"><div class="tbl-avatar">XY</div><div><div class="tbl-name">XYZ Recruiting</div><div class="tbl-sub">jobs@xyz.com</div></div></div></td>
+            <td><span class="badge badge-new">Employer</span></td>
+            <td style="color:var(--gray);font-size:12px">Mar 3</td>
+            <td><span class="badge badge-suspended">Suspended</span></td>
+            <td><span class="tbl-action">Restore</span></td>
+          </tr>
+          <tr>
+            <td><div class="avatar-cell"><div class="tbl-avatar">RC</div><div><div class="tbl-name">Ryan Cruz</div><div class="tbl-sub">ryan@email.com</div></div></div></td>
+            <td><span class="badge badge-new">Seeker</span></td>
+            <td style="color:var(--gray);font-size:12px">Mar 3</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><span class="tbl-action">View</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span class="ct">User Distribution</span></div>
+        <div class="donut-wrap">
+          <div class="donut"></div>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--blue-primary)"></div><span class="legend-label">Job Seekers</span><span class="legend-val">45%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--blue-light)"></div><span class="legend-label">Employers</span><span class="legend-val">25%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div><span class="legend-label">Premium Users</span><span class="legend-val">15%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--light-gray)"></div><span class="legend-label">Inactive</span><span class="legend-val">15%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOBS TABLE + ACTIVITY -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="ch">
+          <span class="ct">Flagged Job Posts</span>
+          <span class="ca">Manage all jobs →</span>
+        </div>
+        <table>
+          <tr><th>Job Title</th><th>Employer</th><th>Flag Reason</th><th>Action</th></tr>
+          <tr>
+            <td style="font-weight:600">Suspicious MLM Role</td>
+            <td style="color:var(--gray);font-size:12px">QuickMoney Co</td>
+            <td><span class="badge badge-suspended">Misleading</span></td>
+            <td><span class="tbl-action">Remove</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600">Data Entry Agent</td>
+            <td style="color:var(--gray);font-size:12px">HireNow PH</td>
+            <td><span class="badge badge-pending">Spam</span></td>
+            <td><span class="tbl-action">Review</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600">Work From Home Jobs</td>
+            <td style="color:var(--gray);font-size:12px">EarnFast</td>
+            <td><span class="badge badge-suspended">Scam</span></td>
+            <td><span class="tbl-action">Remove</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span class="ct">Activity Feed</span><span class="ca">Clear all</span></div>
+        <div class="feed-item">
+          <div class="feed-icon fi-green">👤</div>
+          <div class="feed-text">
+            <div class="ft-main">New user <strong>Juan dela Cruz</strong> registered</div>
+            <div class="ft-time">2 minutes ago</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-icon fi-blue">📋</div>
+          <div class="feed-text">
+            <div class="ft-main">TechCorp posted <strong>Senior Frontend Dev</strong></div>
+            <div class="ft-time">18 minutes ago</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-icon fi-orange">🚨</div>
+          <div class="feed-text">
+            <div class="ft-main">Job flagged: <strong>Suspicious MLM Role</strong></div>
+            <div class="ft-time">1 hour ago</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-icon fi-green">📧</div>
+          <div class="feed-text">
+            <div class="ft-main">Email digest sent to <strong>12,440 users</strong></div>
+            <div class="ft-time">3 hours ago</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-icon fi-blue">🏢</div>
+          <div class="feed-text">
+            <div class="ft-main">New employer <strong>XYZ Recruiting</strong> verified</div>
+            <div class="ft-time">5 hours ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

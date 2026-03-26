@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up – Onda Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+</head>
+<body>
+<div class="signup-wrapper">
+  <!-- LEFT -->
+  <div class="role-panel">
+    <div>
+      <div class="role-logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></div>
+      <h2>Join Onda Job Today</h2>
+      <p>Choose your role to get started with a personalized experience.</p>
+      <div class="role-cards">
+        <div class="role-card selected" id="roleJobseeker" onclick="selectRole('jobseeker')">
+          <div class="role-icon">👤</div>
+          <div class="role-info"><h4>Job Seeker</h4><p>Find jobs & build your career</p></div>
+          <div class="role-check">✓</div>
+        </div>
+        <div class="role-card" id="roleEmployer" onclick="selectRole('employer')">
+          <div class="role-icon">🏢</div>
+          <div class="role-info"><h4>Employer</h4><p>Post jobs & hire talent</p></div>
+          <div class="role-check">✓</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:32px;">By signing up you agree to our Terms & Privacy Policy.</p>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="form-panel">
+    <a href="{{ url_for('main.index') }}" class="back-link">← Back to Home</a>
+    <h1 class="form-title">Create Account</h1>
+    <p class="form-sub">Already have one? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="steps">
+      <div class="step-dot active">1</div>
+      <div class="step-line"></div>
+      <div class="step-dot inactive">2</div>
+      <div class="step-line"></div>
+      <div class="step-dot inactive">3</div>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.signup') }}" id="signupForm" onsubmit="return validateSignup()">
+      <input type="hidden" id="roleInput" name="role" value="jobseeker">
+
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>First Name</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" name="first_name" placeholder="Juan" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" name="last_name" placeholder="dela Cruz" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-wrap">
+        <span class="input-icon">✉️</span>
+        <input type="email" name="email" placeholder="juan@example.com" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number</label>
+      <div class="input-wrap">
+        <span class="input-icon">📱</span>
+        <input type="text" name="phone" placeholder="+63 9XX XXX XXXX">
+      </div>
+    </div>
+
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="pwd" name="password" placeholder="Create password" oninput="checkStrength(this.value)" required>
+          <button class="eye-btn" type="button" onclick="togglePwd()">👁</button>
+        </div>
+        <div class="password-strength">
+          <div class="strength-bar">
+            <div class="bar-seg" id="s1"></div><div class="bar-seg" id="s2"></div>
+            <div class="bar-seg" id="s3"></div><div class="bar-seg" id="s4"></div>
+          </div>
+          <span class="strength-label" id="sLabel">Enter a password</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="confirmPwd" placeholder="Repeat password" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="terms-check">
+      <input type="checkbox" id="terms">
+      <span>I agree to Onda Job's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+    </div>
+
+      <button class="submit-btn" type="submit">Create My Account →</button>
+    </form>
+
+    <div class="divider"><span>or sign up with</span></div>
+    <div class="social-row">
+      <button class="social-btn"><img src="https://www.google.com/favicon.ico" width="16" alt="G"> Google</button>
+      <button class="social-btn">💼 LinkedIn</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function selectRole(role) {
+    document.getElementById('roleJobseeker').classList.remove('selected');
+    document.getElementById('roleEmployer').classList.remove('selected');
+    document.getElementById('role' + (role === 'jobseeker' ? 'Jobseeker' : 'Employer')).classList.add('selected');
+    document.getElementById('roleInput').value = role;
+  }
+
+  function validateSignup() {
+    const p = document.getElementById('pwd').value;
+    const cp = document.getElementById('confirmPwd').value;
+    if (p !== cp) {
+      alert('Passwords do not match.');
+      return false;
+    }
+    return true;
+  }
+
+  function togglePwd() {
+    const p = document.getElementById('pwd');
+    p.type = p.type === 'password' ? 'text' : 'password';
+  }
+  function checkStrength(v) {
+    let score = 0;
+    if (v.length >= 8) score++;
+    if (/[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    for (let i = 1; i <= 4; i++) {
+      document.getElementById('s' + i).classList.toggle('active', i <= score);
+    }
+    document.getElementById('sLabel').textContent = labels[score] || 'Too short';
+  }
+</script>
+</body>
+</html>

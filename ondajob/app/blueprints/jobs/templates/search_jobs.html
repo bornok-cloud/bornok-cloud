@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Jobs – Onda Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-dark: #0A1628; --blue-primary: #0052CC; --blue-mid: #0077B6;
+    --blue-light: #00B4D8; --cyan: #48CAE4; --white: #FFFFFF;
+    --off-white: #F0F8FF; --gray: #6B7A99; --light-gray: #E8F0FB;
+    --green: #22C55E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #F4F8FF; color: var(--blue-dark); }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: white; padding: 16px 48px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--light-gray); box-shadow: 0 2px 12px rgba(0,82,204,0.06);
+  }
+  nav img { height: 38px; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-right a { color: var(--blue-dark); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .btn-primary { padding: 10px 22px; background: linear-gradient(135deg, var(--blue-primary), var(--blue-light)); color: white; border: none; border-radius: 50px; font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; }
+
+  /* SEARCH HEADER */
+  .search-header {
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-primary));
+    padding: 48px; position: relative; overflow: hidden;
+  }
+  .search-header::after { content:''; position:absolute;bottom:-1px;left:0;right:0;height:48px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 48'%3E%3Cpath fill='%23F4F8FF' d='M0,24 C360,48 1080,0 1440,24 L1440,48 L0,48 Z'/%3E%3C/svg%3E") no-repeat bottom/cover; }
+  .search-header h1 { font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:white;margin-bottom:8px; }
+  .search-header p { font-size:15px;color:rgba(255,255,255,0.7);margin-bottom:28px; }
+  .search-bar {
+    display:flex;align-items:center;background:white;border-radius:16px;padding:8px 8px 8px 20px;
+    max-width:720px;box-shadow:0 16px 40px rgba(0,0,0,0.2); gap:12px;
+  }
+  .search-bar input { flex:1;border:none;outline:none;font-size:15px;color:var(--blue-dark);font-family:'DM Sans',sans-serif; }
+  .sb-divider { width:1px;height:28px;background:var(--light-gray); }
+  .search-bar select { border:none;outline:none;font-size:14px;color:var(--gray);background:transparent;font-family:'DM Sans',sans-serif; }
+  .sb-btn { padding:12px 28px;background:linear-gradient(135deg,var(--blue-primary),var(--blue-light));color:white;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer; }
+
+  /* LAYOUT */
+  .page-layout { display:flex;gap:28px;padding:36px 48px;max-width:1400px;margin:0 auto; }
+
+  /* FILTER SIDEBAR */
+  .filter-sidebar { width:280px;flex-shrink:0; }
+  .filter-card { background:white;border-radius:20px;padding:24px;margin-bottom:20px;border:1px solid rgba(0,82,204,0.06); }
+  .filter-title { font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--blue-dark);margin-bottom:20px; }
+  .filter-section { margin-bottom:24px; }
+  .filter-section-label { font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px; }
+  .checkbox-item { display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer; }
+  .checkbox-item input { accent-color:var(--blue-primary); }
+  .checkbox-item label { font-size:14px;color:var(--blue-dark);cursor:pointer; }
+  .checkbox-item span { margin-left:auto;font-size:12px;color:var(--gray); }
+
+  .range-slider { width:100%; accent-color:var(--blue-primary); }
+  .range-labels { display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-top:6px; }
+
+  .tag-filters { display:flex;flex-wrap:wrap;gap:8px; }
+  .tag-filter { padding:6px 14px;border-radius:50px;font-size:13px;border:1.5px solid var(--light-gray);color:var(--gray);cursor:pointer;transition:all 0.2s; }
+  .tag-filter:hover,.tag-filter.active { border-color:var(--blue-primary);color:var(--blue-primary);background:rgba(0,82,204,0.06); }
+
+  .apply-filters { width:100%;padding:13px;background:linear-gradient(135deg,var(--blue-primary),var(--blue-light));color:white;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-top:4px; }
+  .clear-filters { width:100%;padding:11px;background:transparent;color:var(--gray);border:1.5px solid var(--light-gray);border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;margin-top:10px; }
+
+  /* RESULTS */
+  .results-area { flex:1; }
+  .results-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:20px; }
+  .results-count { font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--blue-dark); }
+  .results-count span { color:var(--blue-primary); }
+  .sort-select { padding:10px 16px;border:1.5px solid var(--light-gray);border-radius:10px;font-size:14px;color:var(--blue-dark);background:white;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer; }
+
+  .active-filters { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px; }
+  .active-tag { display:flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(0,82,204,0.08);color:var(--blue-primary);border-radius:50px;font-size:13px;font-weight:600; }
+  .active-tag button { background:none;border:none;cursor:pointer;color:var(--blue-primary);font-size:14px;line-height:1; }
+
+  /* JOB CARDS */
+  .job-card {
+    background:white;border-radius:20px;padding:26px;margin-bottom:16px;
+    border:1.5px solid transparent;cursor:pointer;transition:all 0.25s;
+    display:flex;align-items:center;gap:20px;
+  }
+  .job-card:hover { border-color:var(--blue-primary);box-shadow:0 10px 30px rgba(0,82,204,0.1);transform:translateY(-2px); }
+  .job-card.featured { border-color:rgba(0,82,204,0.2);background:linear-gradient(135deg,#FAFCFF,white); }
+  .co-logo { width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#E8F0FB,#C7D9F8);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0; }
+  .job-main { flex:1; }
+  .job-top-row { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px; }
+  .job-title-wrap h3 { font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--blue-dark);margin-bottom:4px; }
+  .job-title-wrap p { font-size:14px;color:var(--gray); }
+  .job-badges { display:flex;gap:8px;flex-wrap:wrap; }
+  .badge { padding:4px 12px;border-radius:50px;font-size:12px;font-weight:600; }
+  .badge.new { background:#E0F2FE;color:#0369A1; }
+  .badge.featured { background:#FEF9C3;color:#854D0E; }
+  .badge.urgent { background:#FEE2E2;color:#991B1B; }
+  .job-meta-row { display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px; }
+  .jmeta { display:flex;align-items:center;gap:5px;font-size:13px;color:var(--gray); }
+  .job-tags { display:flex;gap:8px;flex-wrap:wrap; }
+  .jtag { padding:4px 12px;background:var(--off-white);border-radius:50px;font-size:12px;color:var(--blue-dark);font-weight:500; }
+  .job-right { display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex-shrink:0; }
+  .job-salary { font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--blue-primary); }
+  .job-posted { font-size:12px;color:var(--gray); }
+  .apply-btn { padding:10px 22px;background:linear-gradient(135deg,var(--blue-primary),var(--blue-light));color:white;border:none;border-radius:50px;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s; }
+  .apply-btn:hover { transform:scale(1.06); }
+  .save-btn { width:36px;height:36px;border-radius:10px;background:var(--off-white);border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s; }
+  .save-btn:hover { background:var(--light-gray); }
+
+  /* PAGINATION */
+  .pagination { display:flex;align-items:center;justify-content:center;gap:8px;margin-top:32px; }
+  .page-btn { width:40px;height:40px;border-radius:10px;border:1.5px solid var(--light-gray);background:white;cursor:pointer;font-size:14px;font-weight:600;color:var(--gray);display:flex;align-items:center;justify-content:center;transition:all 0.2s; }
+  .page-btn:hover,.page-btn.active { background:var(--blue-primary);color:white;border-color:var(--blue-primary); }
+
+  @media(max-width:900px) {
+    .filter-sidebar { display:none; }
+    .page-layout { padding:24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="{{ url_for('main.index') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></a>
+  <div class="nav-right">
+    <a href="{{ url_for('jobseeker.dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('resume.builder') }}">Resume</a>
+    <a href="{{ url_for('messages.inbox') }}">Messages</a>
+    <a href="{{ url_for('auth.login') }}" class="btn-primary">Log In</a>
+  </div>
+</nav>
+
+<div class="search-header">
+  <h1>Find Your Perfect Job</h1>
+  <p>Search from 48,000+ listings with advanced AI-powered filters</p>
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" placeholder="Job title, skill, or company name..." id="mainSearch">
+    <div class="sb-divider"></div>
+    <select>
+      <option>All Locations</option>
+      <option>Metro Manila</option>
+      <option>Cebu City</option>
+      <option>Davao</option>
+      <option>Remote</option>
+    </select>
+    <button class="sb-btn">Search</button>
+  </div>
+</div>
+
+<div class="page-layout">
+  <!-- FILTER SIDEBAR -->
+  <aside class="filter-sidebar">
+    <div class="filter-card">
+      <div class="filter-title">🎛 Filters</div>
+
+      <div class="filter-section">
+        <div class="filter-section-label">Job Type</div>
+        <div class="checkbox-item"><input type="checkbox" checked id="ft"><label for="ft">Full-time</label><span>28,400</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="pt"><label for="pt">Part-time</label><span>6,200</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="ct"><label for="ct">Contract</label><span>4,800</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="fr"><label for="fr">Freelance</label><span>2,100</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="in"><label for="in">Internship</label><span>1,500</span></div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-label">Work Setup</div>
+        <div class="checkbox-item"><input type="checkbox" id="rem"><label for="rem">Remote</label><span>14,600</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="ons"><label for="ons">On-site</label><span>22,000</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="hyb"><label for="hyb">Hybrid</label><span>11,400</span></div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-label">Salary Range (Monthly ₱)</div>
+        <input type="range" class="range-slider" min="0" max="300000" value="150000" id="salaryRange" oninput="document.getElementById('salVal').textContent='₱'+Number(this.value).toLocaleString()">
+        <div class="range-labels"><span>₱0</span><span id="salVal">₱150,000</span><span>₱300K+</span></div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-label">Experience Level</div>
+        <div class="tag-filters">
+          <span class="tag-filter active">Entry</span>
+          <span class="tag-filter">Mid</span>
+          <span class="tag-filter">Senior</span>
+          <span class="tag-filter">Lead</span>
+          <span class="tag-filter">Manager</span>
+          <span class="tag-filter">Director</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-label">Industry</div>
+        <div class="checkbox-item"><input type="checkbox" checked id="tech"><label for="tech">Technology</label><span>8,240</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="fin"><label for="fin">Finance</label><span>4,120</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="hlt"><label for="hlt">Healthcare</label><span>3,890</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="mkt"><label for="mkt">Marketing</label><span>3,450</span></div>
+        <div class="checkbox-item"><input type="checkbox" id="edu"><label for="edu">Education</label><span>2,300</span></div>
+      </div>
+
+      <button class="apply-filters" onclick="filterJobs()">Apply Filters</button>
+      <button class="clear-filters">Clear All</button>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-title">⚡ AI Matching</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.7;margin-bottom:16px;">Turn on AI matching to see jobs ranked by how well they match your profile.</p>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="checkbox" checked style="accent-color:var(--blue-primary);width:auto;">
+        <span style="font-size:14px;font-weight:600;color:var(--blue-dark);">AI Match Score</span>
+      </label>
+    </div>
+  </aside>
+
+  <!-- RESULTS -->
+  <div class="results-area">
+    <div class="results-header">
+      <div class="results-count"><span>48,240</span> jobs found</div>
+      <select class="sort-select">
+        <option>Most Relevant</option>
+        <option>Newest First</option>
+        <option>Highest Salary</option>
+        <option>Most Applied</option>
+      </select>
+    </div>
+
+    <div class="active-filters">
+      <span class="active-tag">Full-time <button>×</button></span>
+      <span class="active-tag">Technology <button>×</button></span>
+      <span class="active-tag">Metro Manila <button>×</button></span>
+    </div>
+
+    <!-- JOB CARDS -->
+    <div class="job-card featured">
+      <div class="co-logo">🏢</div>
+      <div class="job-main">
+        <div class="job-top-row">
+          <div class="job-title-wrap">
+            <h3>Senior Frontend Developer</h3>
+            <p>TechCorp Philippines · Makati City</p>
+          </div>
+          <div class="job-badges"><span class="badge featured">Featured</span><span class="badge new">AI 95%</span></div>
+        </div>
+        <div class="job-meta-row">
+          <span class="jmeta">⏰ Full-time</span>
+          <span class="jmeta">📍 Remote</span>
+          <span class="jmeta">🎓 5+ years</span>
+          <span class="jmeta">👥 500+ employees</span>
+        </div>
+        <div class="job-tags">
+          <span class="jtag">React.js</span><span class="jtag">TypeScript</span><span class="jtag">Next.js</span><span class="jtag">GraphQL</span>
+        </div>
+      </div>
+      <div class="job-right">
+        <div>
+          <div class="job-salary">₱80K–120K</div>
+          <div class="job-posted">2 days ago</div>
+        </div>
+        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
+        <button class="save-btn">🔖</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="co-logo">🚀</div>
+      <div class="job-main">
+        <div class="job-top-row">
+          <div class="job-title-wrap">
+            <h3>Product Designer (UX/UI)</h3>
+            <p>StartupHub Inc. · BGC, Taguig</p>
+          </div>
+          <div class="job-badges"><span class="badge new">New</span></div>
+        </div>
+        <div class="job-meta-row">
+          <span class="jmeta">⏰ Full-time</span>
+          <span class="jmeta">📍 Hybrid</span>
+          <span class="jmeta">🎓 2-3 years</span>
+          <span class="jmeta">👥 100–200</span>
+        </div>
+        <div class="job-tags">
+          <span class="jtag">Figma</span><span class="jtag">Prototyping</span><span class="jtag">Design Systems</span>
+        </div>
+      </div>
+      <div class="job-right">
+        <div>
+          <div class="job-salary">₱45K–65K</div>
+          <div class="job-posted">1 day ago</div>
+        </div>
+        <button class="apply-btn">Apply Now</button>
+        <button class="save-btn">🔖</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="co-logo">💡</div>
+      <div class="job-main">
+        <div class="job-top-row">
+          <div class="job-title-wrap">
+            <h3>Data Scientist</h3>
+            <p>Analytics PH · Pasig City</p>
+          </div>
+          <div class="job-badges"><span class="badge featured">Featured</span><span class="badge urgent">Urgent</span></div>
+        </div>
+        <div class="job-meta-row">
+          <span class="jmeta">⏰ Full-time</span>
+          <span class="jmeta">📍 On-site</span>
+          <span class="jmeta">🎓 3-5 years</span>
+        </div>
+        <div class="job-tags">
+          <span class="jtag">Python</span><span class="jtag">TensorFlow</span><span class="jtag">SQL</span><span class="jtag">Power BI</span>
+        </div>
+      </div>
+      <div class="job-right">
+        <div>
+          <div class="job-salary">₱100K–160K</div>
+          <div class="job-posted">3 days ago</div>
+        </div>
+        <button class="apply-btn">Apply Now</button>
+        <button class="save-btn">🔖</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="co-logo">📱</div>
+      <div class="job-main">
+        <div class="job-top-row">
+          <div class="job-title-wrap">
+            <h3>Mobile Developer (Flutter)</h3>
+            <p>AppFactory PH · Cebu City</p>
+          </div>
+          <div class="job-badges"><span class="badge new">New</span></div>
+        </div>
+        <div class="job-meta-row">
+          <span class="jmeta">⏰ Full-time</span>
+          <span class="jmeta">📍 Remote</span>
+          <span class="jmeta">🎓 2+ years</span>
+        </div>
+        <div class="job-tags">
+          <span class="jtag">Flutter</span><span class="jtag">Dart</span><span class="jtag">Firebase</span><span class="jtag">REST APIs</span>
+        </div>
+      </div>
+      <div class="job-right">
+        <div>
+          <div class="job-salary">₱60K–90K</div>
+          <div class="job-posted">Today</div>
+        </div>
+        <button class="apply-btn">Apply Now</button>
+        <button class="save-btn">🔖</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="co-logo">☁️</div>
+      <div class="job-main">
+        <div class="job-top-row">
+          <div class="job-title-wrap">
+            <h3>Cloud Solutions Architect</h3>
+            <p>CloudSync Philippines · Ortigas Center</p>
+          </div>
+          <div class="job-badges"><span class="badge featured">Featured</span></div>
+        </div>
+        <div class="job-meta-row">
+          <span class="jmeta">⏰ Full-time</span>
+          <span class="jmeta">📍 Hybrid</span>
+          <span class="jmeta">🎓 7+ years</span>
+        </div>
+        <div class="job-tags">
+          <span class="jtag">AWS</span><span class="jtag">Azure</span><span class="jtag">Terraform</span><span class="jtag">Kubernetes</span>
+        </div>
+      </div>
+      <div class="job-right">
+        <div>
+          <div class="job-salary">₱150K–200K</div>
+          <div class="job-posted">5 days ago</div>
+        </div>
+        <button class="apply-btn">Apply Now</button>
+        <button class="save-btn">🔖</button>
+      </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn">←</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">...</button>
+      <button class="page-btn">24</button>
+      <button class="page-btn">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tag-filter').forEach(t => {
+    t.addEventListener('click', () => t.classList.toggle('active'));
+  });
+  function filterJobs() {
+    const cards = document.querySelectorAll('.job-card');
+    cards.forEach((c, i) => {
+      c.style.opacity = '0';
+      setTimeout(() => { c.style.opacity = '1'; }, i * 80);
+    });
+  }
+</script>
+</body>
+</html>

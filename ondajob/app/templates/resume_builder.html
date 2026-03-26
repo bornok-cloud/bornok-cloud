@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Builder – Onda Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/resume_builder.css') }}">
+</head>
+<body>
+<nav>
+  <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job">
+  <div class="nav-right">
+    <a href="{{ url_for('jobseeker.dashboard') }}">← Dashboard</a>
+    <a href="#">Templates</a>
+    <a href="#">My Resumes</a>
+    <button class="save-btn-nav">💾 Save Resume</button>
+  </div>
+</nav>
+
+<div class="builder-layout">
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="lp-header">
+      <div class="lp-title">📄 Resume Builder</div>
+      <div class="lp-sub">AI-powered resume scoring & optimization</div>
+    </div>
+
+    <div class="score-section">
+      <div class="score-row">
+        <span class="score-label">Resume Score</span>
+        <span class="score-num">72/100</span>
+      </div>
+      <div class="score-bar"><div class="score-fill" style="width:72%"></div></div>
+      <div class="score-tip">💡 Add 2 more skills and a summary to reach 90+</div>
+    </div>
+
+    <div class="sections-nav">
+      <div class="sn-label">Sections</div>
+      <div class="sn-item active">
+        <div class="sn-left"><div class="sn-icon">👤</div><span class="sn-name">Personal Info</span></div>
+        <div class="sn-check">✓</div>
+      </div>
+      <div class="sn-item">
+        <div class="sn-left"><div class="sn-icon">📝</div><span class="sn-name">Summary</span></div>
+        <div class="sn-check">✓</div>
+      </div>
+      <div class="sn-item">
+        <div class="sn-left"><div class="sn-icon">💼</div><span class="sn-name">Experience</span></div>
+        <div class="sn-check">✓</div>
+      </div>
+      <div class="sn-item">
+        <div class="sn-left"><div class="sn-icon">🎓</div><span class="sn-name">Education</span></div>
+        <div class="sn-check">✓</div>
+      </div>
+      <div class="sn-item">
+        <div class="sn-left"><div class="sn-icon">⭐</div><span class="sn-name">Skills</span></div>
+        <div class="sn-empty"></div>
+      </div>
+      <div class="sn-item">
+        <div class="sn-left"><div class="sn-icon">🏆</div><span class="sn-name">Certifications</span></div>
+        <div class="sn-empty"></div>
+      </div>
+      <div class="sn-item">
+        <div class="sn-left"><div class="sn-icon">🔗</div><span class="sn-name">Portfolio / Links</span></div>
+        <div class="sn-empty"></div>
+      </div>
+    </div>
+
+    <div class="ai-tips">
+      <div class="ait-title">🤖 AI Suggestions</div>
+      <div class="ait-tip">✅ Add measurable results to your experience (e.g. "increased sales by 30%")</div>
+      <div class="ait-tip">✅ Include at least 8 relevant skills for better match scores</div>
+      <div class="ait-tip">✅ Upload a professional headshot to increase recruiter attention by 40%</div>
+    </div>
+  </div>
+
+  <!-- RIGHT AREA -->
+  <div class="right-area">
+    <!-- FORM -->
+    <div class="form-area">
+      <div class="fa-title">Personal Information</div>
+      <div class="fa-sub">Start with your basic details</div>
+
+      <div class="form-card">
+        <div class="fc-header"><span class="fc-title">📋 Basic Info</span></div>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" value="Juan"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" value="dela Cruz"></div>
+        </div>
+        <div class="form-group"><label>Professional Title</label><input type="text" value="Senior Frontend Developer"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input type="email" value="juan@email.com"></div>
+          <div class="form-group"><label>Phone</label><input type="text" value="+63 917 123 4567"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Location</label><input type="text" value="Makati City, Philippines"></div>
+          <div class="form-group"><label>LinkedIn URL</label><input type="text" placeholder="linkedin.com/in/..."></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="fc-header"><span class="fc-title">📝 Professional Summary</span></div>
+        <div class="form-group">
+          <label>Summary <span style="color:var(--blue-light)">(AI will enhance this)</span></label>
+          <textarea>Results-driven Frontend Developer with 5+ years of experience building scalable web applications using React.js and TypeScript. Passionate about creating intuitive user interfaces and improving developer experience.</textarea>
+        </div>
+        <button style="padding:9px 18px;background:rgba(0,180,216,0.1);color:var(--blue-light);border:none;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;">🤖 Enhance with AI</button>
+      </div>
+
+      <div class="form-card">
+        <div class="fc-header">
+          <span class="fc-title">⭐ Skills</span>
+          <button class="fc-add">+ Add Skill</button>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">React.js <button>×</button></span>
+          <span class="skill-tag">TypeScript <button>×</button></span>
+          <span class="skill-tag">Next.js <button>×</button></span>
+          <span class="skill-tag">Node.js <button>×</button></span>
+          <span class="skill-tag">GraphQL <button>×</button></span>
+          <span class="skill-tag">CSS/SASS <button>×</button></span>
+        </div>
+        <div class="add-skill-row">
+          <input type="text" placeholder="Add a skill..." id="skillInput">
+          <button onclick="addSkill()">Add</button>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="fc-header">
+          <span class="fc-title">💼 Work Experience</span>
+          <button class="fc-add">+ Add Job</button>
+        </div>
+        <div class="form-group"><label>Job Title</label><input type="text" value="Frontend Developer"></div>
+        <div class="form-group"><label>Company</label><input type="text" value="TechSolutions Inc."></div>
+        <div class="form-row">
+          <div class="form-group"><label>Start Date</label><input type="text" value="Jan 2022"></div>
+          <div class="form-group"><label>End Date</label><input type="text" value="Present"></div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea>Built and maintained React.js components for the company's main SaaS product. Led front-end architecture decisions and mentored 2 junior developers.</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-area">
+      <div class="pa-toolbar">
+        <span class="pa-title">Live Preview</span>
+        <div class="pa-btns">
+          <button class="pa-btn">📋 Copy</button>
+          <button class="pa-btn primary">⬇️ Download PDF</button>
+        </div>
+      </div>
+
+      <div class="resume-paper">
+        <div class="rp-header">
+          <div class="rp-name">Juan dela Cruz</div>
+          <div class="rp-title">Senior Frontend Developer</div>
+          <div class="rp-contact">
+            <span class="rc-item">✉️ juan@email.com</span>
+            <span class="rc-item">📱 +63 917 123 4567</span>
+            <span class="rc-item">📍 Makati City</span>
+          </div>
+        </div>
+        <div class="rp-body">
+          <div class="rp-section">
+            <div class="rp-sec-title">Summary</div>
+            <p class="rp-summary">Results-driven Frontend Developer with 5+ years of experience building scalable web applications using React.js and TypeScript. Passionate about creating intuitive user interfaces.</p>
+          </div>
+          <div class="rp-section">
+            <div class="rp-sec-title">Experience</div>
+            <div class="rp-job">
+              <div class="rp-job-title">Frontend Developer</div>
+              <div class="rp-job-meta">TechSolutions Inc. · Jan 2022 – Present</div>
+              <p class="rp-job-desc">Built and maintained React.js components for the company's main SaaS product. Led front-end architecture decisions and mentored 2 junior developers.</p>
+            </div>
+            <div class="rp-job">
+              <div class="rp-job-title">Junior Web Developer</div>
+              <div class="rp-job-meta">StartupPH · Mar 2020 – Dec 2021</div>
+              <p class="rp-job-desc">Developed responsive web interfaces using HTML, CSS, and Vue.js. Collaborated with design team to implement pixel-perfect UI.</p>
+            </div>
+          </div>
+          <div class="rp-section">
+            <div class="rp-sec-title">Education</div>
+            <div class="rp-job">
+              <div class="rp-job-title">BS Computer Science</div>
+              <div class="rp-job-meta">University of the Philippines · 2016 – 2020</div>
+            </div>
+          </div>
+          <div class="rp-section">
+            <div class="rp-sec-title">Skills</div>
+            <div class="rp-skills">
+              <span class="rp-skill">React.js</span><span class="rp-skill">TypeScript</span><span class="rp-skill">Next.js</span>
+              <span class="rp-skill">Node.js</span><span class="rp-skill">GraphQL</span><span class="rp-skill">CSS/SASS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function addSkill() {
+    const input = document.getElementById('skillInput');
+    if (!input.value.trim()) return;
+    const tag = document.createElement('span');
+    tag.className = 'skill-tag';
+    tag.innerHTML = `${input.value} <button onclick="this.parentElement.remove()">×</button>`;
+    document.querySelector('.skill-tags').appendChild(tag);
+    input.value = '';
+  }
+  document.querySelectorAll('.sn-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.sn-item').forEach(x => x.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

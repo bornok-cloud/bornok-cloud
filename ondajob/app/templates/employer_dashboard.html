@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employer Dashboard – Onda Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/employer_dashboard.css') }}">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></div>
+  <div class="sidebar-user">
+    <div class="u-avatar">🏢</div>
+    <div>
+      <div class="u-name">TechCorp Philippines</div>
+      <div class="u-sub">Employer Account</div>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nsl">Overview</div>
+    <a class="nav-item active" href="{{ url_for('employer.dashboard') }}"><span class="nav-icon">🏠</span>Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📢</span>Post a Job</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📋</span>Manage Jobs <span class="nav-badge">5</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">👥</span>Applicants <span class="nav-badge">34</span></a>
+  </div>
+  <div class="nav-section">
+    <div class="nsl">Analytics</div>
+    <a class="nav-item" href="#"><span class="nav-icon">📊</span>Analytics</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span>Interviews</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🔍</span>Talent Search</a>
+  </div>
+  <div class="nav-section">
+    <div class="nsl">Communication</div>
+    <a class="nav-item" href="{{ url_for('messages.inbox') }}"><span class="nav-icon">💬</span>Messages <span class="nav-badge">7</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">🔔</span>Notifications</a>
+  </div>
+  <div class="sidebar-footer">
+    <a class="nav-item" href="#"><span class="nav-icon">⚙️</span>Company Settings</a>
+    <a class="nav-item" href="{{ url_for('main.index') }}"><span class="nav-icon">🚪</span>Log Out</a>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Employer Dashboard</h1>
+      <p>Thursday, March 5, 2026 · 34 new applicants this week</p>
+    </div>
+    <div class="tb-actions">
+      <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+      <button class="post-job-btn">+ Post a Job</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-blue">📢</div><span class="trend up">↑ 2</span></div>
+        <div class="stat-num">5</div><div class="stat-label">Active Job Posts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-green">👥</div><span class="trend up">↑ 12</span></div>
+        <div class="stat-num">128</div><div class="stat-label">Total Applicants</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-orange">📅</div><span class="trend up">↑ 3</span></div>
+        <div class="stat-num">8</div><div class="stat-label">Interviews Scheduled</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-purple">👁</div><span class="trend up">↑ 24%</span></div>
+        <div class="stat-num">3.4K</div><div class="stat-label">Job Views (7 days)</div>
+      </div>
+    </div>
+
+    <!-- BAR CHART -->
+    <div class="chart-card">
+      <div class="cc-header">
+        <span class="cc-title">📊 Applicants per Day</span>
+        <div class="cc-tabs">
+          <span class="cc-tab">7D</span>
+          <span class="cc-tab active">30D</span>
+          <span class="cc-tab">90D</span>
+        </div>
+      </div>
+      <div class="bar-chart">
+        <div class="bar-group"><div class="bar" style="height:60%"></div><span class="bar-val">18</span><span class="bar-label">Feb 4</span></div>
+        <div class="bar-group"><div class="bar" style="height:45%"></div><span class="bar-val">13</span><span class="bar-label">Feb 9</span></div>
+        <div class="bar-group"><div class="bar" style="height:75%"></div><span class="bar-val">22</span><span class="bar-label">Feb 14</span></div>
+        <div class="bar-group"><div class="bar" style="height:50%"></div><span class="bar-val">15</span><span class="bar-label">Feb 19</span></div>
+        <div class="bar-group"><div class="bar" style="height:90%"></div><span class="bar-val">28</span><span class="bar-label">Feb 24</span></div>
+        <div class="bar-group"><div class="bar" style="height:65%"></div><span class="bar-val">19</span><span class="bar-label">Mar 1</span></div>
+        <div class="bar-group"><div class="bar" style="height:100%"></div><span class="bar-val">34</span><span class="bar-label">Mar 5</span></div>
+      </div>
+    </div>
+
+    <!-- TWO COL -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Active Job Postings</span>
+          <span class="card-action">+ New Post</span>
+        </div>
+        <div class="job-row">
+          <div class="status-dot active"></div>
+          <div class="job-row-info">
+            <div class="jr-title">Senior Frontend Developer</div>
+            <div class="jr-meta">Remote · Full-time · Posted 2 days ago</div>
+          </div>
+          <div class="jr-stats">
+            <div class="jr-stat"><div class="jr-num">42</div><div class="jr-lbl">Applicants</div></div>
+            <div class="jr-stat"><div class="jr-num">1.2K</div><div class="jr-lbl">Views</div></div>
+          </div>
+        </div>
+        <div class="job-row">
+          <div class="status-dot active"></div>
+          <div class="job-row-info">
+            <div class="jr-title">Backend Engineer (Node.js)</div>
+            <div class="jr-meta">Hybrid · Full-time · Posted 5 days ago</div>
+          </div>
+          <div class="jr-stats">
+            <div class="jr-stat"><div class="jr-num">28</div><div class="jr-lbl">Applicants</div></div>
+            <div class="jr-stat"><div class="jr-num">890</div><div class="jr-lbl">Views</div></div>
+          </div>
+        </div>
+        <div class="job-row">
+          <div class="status-dot paused"></div>
+          <div class="job-row-info">
+            <div class="jr-title">DevOps Engineer</div>
+            <div class="jr-meta">On-site · Full-time · Paused</div>
+          </div>
+          <div class="jr-stats">
+            <div class="jr-stat"><div class="jr-num">15</div><div class="jr-lbl">Applicants</div></div>
+            <div class="jr-stat"><div class="jr-num">440</div><div class="jr-lbl">Views</div></div>
+          </div>
+        </div>
+        <div class="job-row">
+          <div class="status-dot active"></div>
+          <div class="job-row-info">
+            <div class="jr-title">QA Engineer</div>
+            <div class="jr-meta">Remote · Full-time · Posted 1 week ago</div>
+          </div>
+          <div class="jr-stats">
+            <div class="jr-stat"><div class="jr-num">21</div><div class="jr-lbl">Applicants</div></div>
+            <div class="jr-stat"><div class="jr-num">680</div><div class="jr-lbl">Views</div></div>
+          </div>
+        </div>
+        <div class="job-row">
+          <div class="status-dot closed"></div>
+          <div class="job-row-info">
+            <div class="jr-title">Product Manager</div>
+            <div class="jr-meta">Hybrid · Full-time · Closed</div>
+          </div>
+          <div class="jr-stats">
+            <div class="jr-stat"><div class="jr-num">22</div><div class="jr-lbl">Applicants</div></div>
+            <div class="jr-stat"><div class="jr-num">510</div><div class="jr-lbl">Views</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Top Applicants</span>
+          <span class="card-action">View all</span>
+        </div>
+        <div class="app-item">
+          <div class="app-avatar">JD</div>
+          <div class="app-info">
+            <div class="app-name">Juan dela Cruz</div>
+            <div class="app-role">Frontend Dev · 5 yrs exp</div>
+          </div>
+          <div>
+            <span class="score-badge">95%</span>
+          </div>
+          <div class="action-btns">
+            <button class="btn-sm-green">✓</button>
+            <button class="btn-sm-red">✕</button>
+          </div>
+        </div>
+        <div class="app-item">
+          <div class="app-avatar">MS</div>
+          <div class="app-info">
+            <div class="app-name">Maria Santos</div>
+            <div class="app-role">Full-stack Dev · 4 yrs exp</div>
+          </div>
+          <span class="score-badge">88%</span>
+          <div class="action-btns">
+            <button class="btn-sm-green">✓</button>
+            <button class="btn-sm-red">✕</button>
+          </div>
+        </div>
+        <div class="app-item">
+          <div class="app-avatar">RC</div>
+          <div class="app-info">
+            <div class="app-name">Ryan Cruz</div>
+            <div class="app-role">React Dev · 3 yrs exp</div>
+          </div>
+          <span class="score-badge">82%</span>
+          <div class="action-btns">
+            <button class="btn-sm-green">✓</button>
+            <button class="btn-sm-red">✕</button>
+          </div>
+        </div>
+        <div class="app-item">
+          <div class="app-avatar">AL</div>
+          <div class="app-info">
+            <div class="app-name">Ana Lim</div>
+            <div class="app-role">Frontend Dev · 6 yrs exp</div>
+          </div>
+          <span class="score-badge">79%</span>
+          <div class="action-btns">
+            <button class="btn-sm-green">✓</button>
+            <button class="btn-sm-red">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.cc-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.cc-tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

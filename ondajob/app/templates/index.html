@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onda Job – Your Career Starts Here</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="{{ url_for('main.index') }}"><img src="{{ url_for('static', filename='images/logo_long.png') }}" alt="Onda Job"></a>
+  <div class="nav-links">
+    <a href="{{ url_for('jobs.search') }}">Find Jobs</a>
+    <a href="#">Companies</a>
+    <a href="#">Salary Guide</a>
+    <a href="#">Resources</a>
+  </div>
+  <div class="nav-cta">
+    <a href="{{ url_for('auth.login') }}" class="btn-outline">Log In</a>
+    <a href="{{ url_for('auth.signup') }}" class="btn-solid">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bubble"></div>
+  <div class="hero-bubble"></div>
+  <div class="hero-bubble"></div>
+
+  <div class="hero-badge"><span></span> 12,000+ new jobs posted this month</div>
+  <h1>Find Your <span>Dream Job</span><br>With Onda Job</h1>
+  <p>Connect with top employers, build your resume, and land the career you deserve. Your journey starts with a single wave.</p>
+
+  <div class="search-box">
+    <span>🔍</span>
+    <input type="text" placeholder="Job title, keyword, or company...">
+    <div class="divider"></div>
+    <select>
+      <option>All Locations</option>
+      <option>Metro Manila</option>
+      <option>Cebu</option>
+      <option>Davao</option>
+      <option>Remote</option>
+    </select>
+    <button class="search-btn">Search Jobs</button>
+  </div>
+
+  <div class="hero-tags">
+    <span class="hero-tag">💻 Software Engineer</span>
+    <span class="hero-tag">📊 Data Analyst</span>
+    <span class="hero-tag">🎨 UI/UX Designer</span>
+    <span class="hero-tag">📱 Mobile Dev</span>
+    <span class="hero-tag">☁️ Cloud Architect</span>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">48K+</div><div class="stat-label">Active Jobs</div></div>
+    <div class="stat"><div class="stat-num">12K+</div><div class="stat-label">Companies</div></div>
+    <div class="stat"><div class="stat-num">2M+</div><div class="stat-label">Job Seekers</div></div>
+    <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Satisfaction</div></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="section-label">Explore Fields</div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:48px;">
+    <div>
+      <h2 class="section-title" style="margin-bottom:0">Browse by Category</h2>
+    </div>
+    <a href="{{ url_for('jobs.search') }}" style="color:var(--blue-primary);font-weight:600;text-decoration:none;font-size:14px;">View all categories →</a>
+  </div>
+  <div class="categories-grid">
+    <div class="cat-card"><span class="cat-icon">💻</span><div class="cat-name">Technology</div><div class="cat-count">8,240 jobs</div></div>
+    <div class="cat-card"><span class="cat-icon">📊</span><div class="cat-name">Finance</div><div class="cat-count">4,120 jobs</div></div>
+    <div class="cat-card"><span class="cat-icon">🏥</span><div class="cat-name">Healthcare</div><div class="cat-count">3,890 jobs</div></div>
+    <div class="cat-card"><span class="cat-icon">🎨</span><div class="cat-name">Creative</div><div class="cat-count">2,760 jobs</div></div>
+    <div class="cat-card"><span class="cat-icon">📦</span><div class="cat-name">Operations</div><div class="cat-count">5,100 jobs</div></div>
+    <div class="cat-card"><span class="cat-icon">📣</span><div class="cat-name">Marketing</div><div class="cat-count">3,450 jobs</div></div>
+    <div class="cat-card"><span class="cat-icon">⚖️</span><div class="cat-name">Legal</div><div class="cat-count">1,890 jobs</div></div>
+    <div class="cat-card"><span class="cat-icon">🎓</span><div class="cat-name">Education</div><div class="cat-count">2,300 jobs</div></div>
+  </div>
+</section>
+
+<!-- FEATURED JOBS -->
+<section class="featured-section">
+  <div class="section-label">Top Picks</div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:48px;">
+    <h2 class="section-title" style="margin-bottom:0">Featured Jobs</h2>
+    <a href="{{ url_for('jobs.search') }}" style="color:var(--blue-primary);font-weight:600;text-decoration:none;font-size:14px;">Browse all jobs →</a>
+  </div>
+  <div class="jobs-grid">
+    <div class="job-card">
+      <div class="job-top">
+        <div class="company-logo">🏢</div>
+        <span class="job-badge featured">Featured</span>
+      </div>
+      <div class="job-title">Senior Frontend Developer</div>
+      <div class="company-name">TechCorp Philippines · Remote</div>
+      <div class="job-meta">
+        <span class="job-tag">⏰ Full-time</span>
+        <span class="job-tag">📍 Remote</span>
+        <span class="job-tag">🎯 Mid-Senior</span>
+      </div>
+      <div class="job-bottom">
+        <div class="salary">₱80K–120K/mo</div>
+        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-top">
+        <div class="company-logo">🚀</div>
+        <span class="job-badge">New</span>
+      </div>
+      <div class="job-title">Product Designer (UX/UI)</div>
+      <div class="company-name">StartupHub · Makati City</div>
+      <div class="job-meta">
+        <span class="job-tag">⏰ Full-time</span>
+        <span class="job-tag">📍 On-site</span>
+        <span class="job-tag">🎯 Junior</span>
+      </div>
+      <div class="job-bottom">
+        <div class="salary">₱45K–65K/mo</div>
+        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-top">
+        <div class="company-logo">💡</div>
+        <span class="job-badge featured">Featured</span>
+      </div>
+      <div class="job-title">Data Scientist</div>
+      <div class="company-name">Analytics PH · BGC, Taguig</div>
+      <div class="job-meta">
+        <span class="job-tag">⏰ Full-time</span>
+        <span class="job-tag">📍 Hybrid</span>
+        <span class="job-tag">🎯 Senior</span>
+      </div>
+      <div class="job-bottom">
+        <div class="salary">₱100K–160K/mo</div>
+        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div style="text-align:center;margin-bottom:64px;">
+    <div class="section-label" style="text-align:center">Simple Process</div>
+    <h2 class="section-title" style="text-align:center">How Onda Job Works</h2>
+    <p class="section-sub" style="margin:0 auto;text-align:center">Three simple steps to your next opportunity</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">Create Your Profile</div>
+      <p class="step-text">Sign up, upload your resume, and let our AI build a scoring profile that highlights your strengths to employers.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">Discover & Apply</div>
+      <p class="step-text">Search thousands of jobs with advanced filters for salary, experience, and location. Save favorites and apply in one click.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">Get Hired</div>
+      <p class="step-text">Schedule interviews, track your application status, and communicate directly with employers through our platform.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div class="cta-text">
+    <h2>Ready to Ride the Wave?</h2>
+    <p>Join 2 million+ professionals who found their career with Onda Job.</p>
+  </div>
+  <div class="cta-actions">
+    <a href="{{ url_for('auth.signup') }}" class="btn-white">Post a Job</a>
+    <a href="{{ url_for('auth.signup') }}" class="btn-ghost-white">Find a Job</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></div>
+      <p class="footer-desc">Your career starts here. Connect with top employers and build the future you deserve.</p>
+    </div>
+    <div>
+      <div class="footer-title">Job Seekers</div>
+      <ul class="footer-links">
+        <li><a href="{{ url_for('jobs.search') }}">Search Jobs</a></li>
+        <li><a href="{{ url_for('resume.builder') }}">Resume Builder</a></li>
+        <li><a href="{{ url_for('jobseeker.dashboard') }}">My Dashboard</a></li>
+        <li><a href="#">Career Tips</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Employers</div>
+      <ul class="footer-links">
+        <li><a href="{{ url_for('employer.dashboard') }}">Post a Job</a></li>
+        <li><a href="#">Browse Talent</a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Pricing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Onda Job. All rights reserved.</span>
+    <span class="footer-copy">Your Career Starts Here 🌊</span>
+  </div>
+</footer>
+
+</body>
+</html>
