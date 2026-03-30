@@ -30,7 +30,7 @@
   <div class="hero-bubble"></div>
   <div class="hero-bubble"></div>
 
-  <div class="hero-badge"><span></span> 12,000+ new jobs posted this month</div>
+  <div class="hero-badge"><span></span> {{ jobs_count_this_month }}+ new jobs posted this month</div>
   <h1>Find Your <span>Dream Job</span><br>With Onda Job</h1>
   <p>Connect with top employers, build your resume, and land the career you deserve. Your journey starts with a single wave.</p>
 
@@ -57,9 +57,9 @@
   </div>
 
   <div class="hero-stats">
-    <div class="stat"><div class="stat-num">48K+</div><div class="stat-label">Active Jobs</div></div>
-    <div class="stat"><div class="stat-num">12K+</div><div class="stat-label">Companies</div></div>
-    <div class="stat"><div class="stat-num">2M+</div><div class="stat-label">Job Seekers</div></div>
+    <div class="stat"><div class="stat-num">{{ total_jobs }}</div><div class="stat-label">Active Jobs</div></div>
+    <div class="stat"><div class="stat-num">{{ total_companies }}</div><div class="stat-label">Companies</div></div>
+    <div class="stat"><div class="stat-num">{{ total_jobseekers }}</div><div class="stat-label">Job Seekers</div></div>
     <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Satisfaction</div></div>
   </div>
 </section>
@@ -74,14 +74,35 @@
     <a href="{{ url_for('jobs.search') }}" style="color:var(--blue-primary);font-weight:600;text-decoration:none;font-size:14px;">View all categories →</a>
   </div>
   <div class="categories-grid">
-    <div class="cat-card"><span class="cat-icon">💻</span><div class="cat-name">Technology</div><div class="cat-count">8,240 jobs</div></div>
-    <div class="cat-card"><span class="cat-icon">📊</span><div class="cat-name">Finance</div><div class="cat-count">4,120 jobs</div></div>
-    <div class="cat-card"><span class="cat-icon">🏥</span><div class="cat-name">Healthcare</div><div class="cat-count">3,890 jobs</div></div>
-    <div class="cat-card"><span class="cat-icon">🎨</span><div class="cat-name">Creative</div><div class="cat-count">2,760 jobs</div></div>
-    <div class="cat-card"><span class="cat-icon">📦</span><div class="cat-name">Operations</div><div class="cat-count">5,100 jobs</div></div>
-    <div class="cat-card"><span class="cat-icon">📣</span><div class="cat-name">Marketing</div><div class="cat-count">3,450 jobs</div></div>
-    <div class="cat-card"><span class="cat-icon">⚖️</span><div class="cat-name">Legal</div><div class="cat-count">1,890 jobs</div></div>
-    <div class="cat-card"><span class="cat-icon">🎓</span><div class="cat-name">Education</div><div class="cat-count">2,300 jobs</div></div>
+    {% if industries_data %}
+      {% set industry_icons = {
+        'Technology': '💻',
+        'Software/Technology': '💻',
+        'Finance': '📊',
+        'Healthcare': '🏥',
+        'Creative': '🎨',
+        'Design': '🎨',
+        'Marketing/Design': '📣',
+        'Operations': '📦',
+        'Marketing': '📣',
+        'Legal': '⚖️',
+        'Education': '🎓',
+        'Cloud Services': '☁️',
+        'Data Analytics': '📊',
+        'Sales': '📈'
+      } %}
+      {% for industry, count in industries_data.items() %}
+        <div class="cat-card">
+          <span class="cat-icon">{{ industry_icons.get(industry, '💼') }}</span>
+          <div class="cat-name">{{ industry }}</div>
+          <div class="cat-count">{{ count }} job{{ 's' if count != 1 else '' }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-400);">
+        <p>No jobs available yet. Check back soon!</p>
+      </div>
+    {% endif %}
   </div>
 </section>
 
@@ -93,57 +114,39 @@
     <a href="{{ url_for('jobs.search') }}" style="color:var(--blue-primary);font-weight:600;text-decoration:none;font-size:14px;">Browse all jobs →</a>
   </div>
   <div class="jobs-grid">
-    <div class="job-card">
-      <div class="job-top">
-        <div class="company-logo">🏢</div>
-        <span class="job-badge featured">Featured</span>
+    {% if featured_jobs %}
+      {% for job in featured_jobs %}
+        <div class="job-card">
+          <div class="job-top">
+            <div class="company-logo">{{ job.company.logo_emoji if job.company and job.company.logo_emoji else '🏢' }}</div>
+            <span class="job-badge {% if job.is_featured %}featured{% elif job.is_urgent %}urgent{% else %}new{% endif %}">
+              {% if job.is_featured %}Featured{% elif job.is_urgent %}Urgent{% else %}New{% endif %}
+            </span>
+          </div>
+          <div class="job-title">{{ job.title }}</div>
+          <div class="company-name">{{ job.company.name if job.company else 'Company' }} · {{ job.location }}</div>
+          <div class="job-meta">
+            <span class="job-tag">⏰ {{ job.job_type.title() }}</span>
+            <span class="job-tag">📍 {{ job.work_setup.title() }}</span>
+            <span class="job-tag">🎯 {{ job.experience_level.title() }}</span>
+          </div>
+          <div class="job-bottom">
+            <div class="salary">
+              {% if job.salary_min and job.salary_max %}
+                ₱{{ '{:,}'.format(job.salary_min) }}–{{ '{:,}'.format(job.salary_max) }}/mo
+              {% else %}
+                Salary negotiable
+              {% endif %}
+            </div>
+            <a href="{{ url_for('jobs.job_details', job_id=job.id) }}" class="apply-btn">View Job</a>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-400);">
+        <p>No featured jobs available right now. Check back soon!</p>
       </div>
-      <div class="job-title">Senior Frontend Developer</div>
-      <div class="company-name">TechCorp Philippines · Remote</div>
-      <div class="job-meta">
-        <span class="job-tag">⏰ Full-time</span>
-        <span class="job-tag">📍 Remote</span>
-        <span class="job-tag">🎯 Mid-Senior</span>
-      </div>
-      <div class="job-bottom">
-        <div class="salary">₱80K–120K/mo</div>
-        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
-      </div>
-    </div>
-    <div class="job-card">
-      <div class="job-top">
-        <div class="company-logo">🚀</div>
-        <span class="job-badge">New</span>
-      </div>
-      <div class="job-title">Product Designer (UX/UI)</div>
-      <div class="company-name">StartupHub · Makati City</div>
-      <div class="job-meta">
-        <span class="job-tag">⏰ Full-time</span>
-        <span class="job-tag">📍 On-site</span>
-        <span class="job-tag">🎯 Junior</span>
-      </div>
-      <div class="job-bottom">
-        <div class="salary">₱45K–65K/mo</div>
-        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
-      </div>
-    </div>
-    <div class="job-card">
-      <div class="job-top">
-        <div class="company-logo">💡</div>
-        <span class="job-badge featured">Featured</span>
-      </div>
-      <div class="job-title">Data Scientist</div>
-      <div class="company-name">Analytics PH · BGC, Taguig</div>
-      <div class="job-meta">
-        <span class="job-tag">⏰ Full-time</span>
-        <span class="job-tag">📍 Hybrid</span>
-        <span class="job-tag">🎯 Senior</span>
-      </div>
-      <div class="job-bottom">
-        <div class="salary">₱100K–160K/mo</div>
-        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
-      </div>
-    </div>
+    {% endif %}
   </div>
 </section>
 
