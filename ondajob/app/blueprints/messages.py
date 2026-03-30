@@ -53,11 +53,26 @@ def inbox():
         is_read=False
     ).count()
     
+    # Get selected contact (default to first conversation)
+    selected_contact = None
+    messages = []
+    if conversations:
+        selected_contact = conversations[0]["contact"]
+        messages = Message.query.filter(
+            db.or_(
+                db.and_(Message.sender_id == current_user.id, Message.receiver_id == selected_contact.id),
+                db.and_(Message.sender_id == selected_contact.id, Message.receiver_id == current_user.id),
+            )
+        ).order_by(Message.created_at.asc()).all()
+    
     return render_template(
         "messages.html",
         user=current_user,
         conversations=conversations,
-        total_unread=total_unread
+        selected_contact=selected_contact,
+        messages=messages,
+        total_unread=total_unread,
+        now=datetime.utcnow
     )
 
 

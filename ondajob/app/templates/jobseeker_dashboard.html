@@ -104,7 +104,7 @@
         <div class="stat-top">
           <div class="stat-icon cyan">🔖</div>
         </div>
-        <div class="stat-num">18</div>
+        <div class="stat-num">{{ user_saved_jobs|length }}</div>
         <div class="stat-label">Saved Jobs</div>
       </div>
     </div>
@@ -117,50 +117,32 @@
           <span class="card-title">Recent Applications</span>
           <a class="card-action">View all →</a>
         </div>
-        <div class="app-item">
-          <div class="app-logo">🏢</div>
-          <div class="app-info">
-            <div class="app-title">Senior Frontend Developer</div>
-            <div class="app-company">TechCorp Philippines</div>
+        {% if user_applications %}
+          {% for app in user_applications[:5] %}
+            <div class="app-item">
+              <div class="app-logo">{{ app.job.company.logo_emoji if app.job and app.job.company and app.job.company.logo_emoji else '💼' }}</div>
+              <div class="app-info">
+                <div class="app-title">{{ app.job.title if app.job else 'Job Closed' }}</div>
+                <div class="app-company">{{ app.job.company.name if app.job and app.job.company else 'Company' }}</div>
+              </div>
+              <div>
+                <div class="app-date">{{ app.created_at.strftime('%b %d') }}</div>
+                <span class="status-badge {{ app.status }}">
+                  {% if app.status == 'interview' %}Interview
+                  {% elif app.status == 'reviewing' %}Reviewing
+                  {% elif app.status == 'applied' %}Applied
+                  {% elif app.status == 'rejected' %}Not Selected
+                  {% else %}{{ app.status.title() }}
+                  {% endif %}
+                </span>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align: center; padding: 40px; color: var(--gray);">
+            <p>No applications yet. <a href="{{ url_for('jobs.search') }}">Start applying</a></p>
           </div>
-          <div>
-            <div class="app-date">Mar 4</div>
-            <span class="status-badge interview">Interview</span>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-logo">🚀</div>
-          <div class="app-info">
-            <div class="app-title">UX Designer</div>
-            <div class="app-company">StartupHub</div>
-          </div>
-          <div>
-            <div class="app-date">Mar 2</div>
-            <span class="status-badge reviewing">Reviewing</span>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-logo">💡</div>
-          <div class="app-info">
-            <div class="app-title">Data Scientist</div>
-            <div class="app-company">Analytics PH</div>
-          </div>
-          <div>
-            <div class="app-date">Feb 28</div>
-            <span class="status-badge applied">Applied</span>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-logo">📊</div>
-          <div class="app-info">
-            <div class="app-title">Business Analyst</div>
-            <div class="app-company">Finance Group</div>
-          </div>
-          <div>
-            <div class="app-date">Feb 25</div>
-            <span class="status-badge rejected">Not Selected</span>
-          </div>
-        </div>
+        {% endif %}
       </div>
 
       <!-- RECOMMENDED -->
@@ -169,38 +151,25 @@
           <span class="card-title">AI Recommendations</span>
           <a class="card-action" href="{{ url_for('jobs.search') }}">See more</a>
         </div>
-        <div class="rec-item">
-          <div class="rec-logo">💻</div>
-          <div class="rec-info">
-            <div class="rec-title">React Developer</div>
-            <div class="rec-meta">Innovate Co · Remote · ₱70K</div>
+        {% if recommended_jobs %}
+          {% for job in recommended_jobs[:4] %}
+            <div class="rec-item">
+              <div class="rec-logo">{{ job.company.logo_emoji if job.company and job.company.logo_emoji else '💼' }}</div>
+              <div class="rec-info">
+                <div class="rec-title">{{ job.title }}</div>
+                <div class="rec-meta">
+                  {{ job.company.name if job.company else 'Company' }} · {{ job.location }}
+                  {% if job.salary_min and job.salary_max %} · ₱{{ '{:,.0f}'.format((job.salary_min + job.salary_max) / 2) }}{% endif %}
+                </div>
+              </div>
+              <span class="match-badge">{{ (user_profile.match_score if user_profile and user_profile.match_score else 75)|int }}% match</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align: center; padding: 40px; color: var(--gray);">
+            <p>No jobs matching your profile yet</p>
           </div>
-          <span class="match-badge">95% match</span>
-        </div>
-        <div class="rec-item">
-          <div class="rec-logo">🎨</div>
-          <div class="rec-info">
-            <div class="rec-title">Product Designer</div>
-            <div class="rec-meta">CreativeHub · BGC · ₱55K</div>
-          </div>
-          <span class="match-badge">88% match</span>
-        </div>
-        <div class="rec-item">
-          <div class="rec-logo">📱</div>
-          <div class="rec-info">
-            <div class="rec-title">Mobile Dev (Flutter)</div>
-            <div class="rec-meta">AppFactory · Hybrid · ₱80K</div>
-          </div>
-          <span class="match-badge">82% match</span>
-        </div>
-        <div class="rec-item">
-          <div class="rec-logo">☁️</div>
-          <div class="rec-info">
-            <div class="rec-title">Cloud Engineer</div>
-            <div class="rec-meta">CloudSync PH · Remote · ₱120K</div>
-          </div>
-          <span class="match-badge">78% match</span>
-        </div>
+        {% endif %}
       </div>
     </div>
 
@@ -211,11 +180,19 @@
         <a class="card-action" href="{{ url_for('resume.builder') }}">Edit Resume</a>
       </div>
       <div class="skills-wrap">
-        <div class="skill-row"><span class="skill-name">React.js</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90%</span></div>
-        <div class="skill-row"><span class="skill-name">TypeScript</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80%</span></div>
-        <div class="skill-row"><span class="skill-name">Node.js</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div><span class="skill-pct">70%</span></div>
-        <div class="skill-row"><span class="skill-name">UI/UX Design</span><div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div><span class="skill-pct">65%</span></div>
-        <div class="skill-row"><span class="skill-name">AWS</span><div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div><span class="skill-pct">50%</span></div>
+        {% if user_profile and user_profile.skills %}
+          {% for skill in user_profile.skills.split(',')[:5] %}
+            <div class="skill-row">
+              <span class="skill-name">{{ skill.strip() }}</span>
+              <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+              <span class="skill-pct">75%</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align: center; padding: 40px; color: var(--gray);">
+            <p><a href="{{ url_for('profile.edit_profile') }}">Add skills to your profile</a></p>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

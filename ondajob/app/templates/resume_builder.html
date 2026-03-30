@@ -29,10 +29,18 @@
     <div class="score-section">
       <div class="score-row">
         <span class="score-label">Resume Score</span>
-        <span class="score-num">72/100</span>
+        <span class="score-num">{{ profile.resume_score|default(0) }}/100</span>
       </div>
-      <div class="score-bar"><div class="score-fill" style="width:72%"></div></div>
-      <div class="score-tip">💡 Add 2 more skills and a summary to reach 90+</div>
+      <div class="score-bar"><div class="score-fill" style="width:{{ profile.resume_score|default(0) }}%"></div></div>
+      <div class="score-tip">
+        {% if profile.resume_score|default(0) >= 80 %}
+          ✅ Excellent resume! You're ready for applications.
+        {% elif profile.resume_score|default(0) >= 60 %}
+          💡 Add more skills and a professional summary to reach 80+
+        {% else %}
+          💡 Complete your profile to improve your resume score
+        {% endif %}
+      </div>
     </div>
 
     <div class="sections-nav">

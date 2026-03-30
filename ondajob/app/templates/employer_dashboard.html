@@ -85,13 +85,15 @@
         </div>
       </div>
       <div class="bar-chart">
-        <div class="bar-group"><div class="bar" style="height:60%"></div><span class="bar-val">18</span><span class="bar-label">Feb 4</span></div>
-        <div class="bar-group"><div class="bar" style="height:45%"></div><span class="bar-val">13</span><span class="bar-label">Feb 9</span></div>
-        <div class="bar-group"><div class="bar" style="height:75%"></div><span class="bar-val">22</span><span class="bar-label">Feb 14</span></div>
-        <div class="bar-group"><div class="bar" style="height:50%"></div><span class="bar-val">15</span><span class="bar-label">Feb 19</span></div>
-        <div class="bar-group"><div class="bar" style="height:90%"></div><span class="bar-val">28</span><span class="bar-label">Feb 24</span></div>
-        <div class="bar-group"><div class="bar" style="height:65%"></div><span class="bar-val">19</span><span class="bar-label">Mar 1</span></div>
-        <div class="bar-group"><div class="bar" style="height:100%"></div><span class="bar-val">34</span><span class="bar-label">Mar 5</span></div>
+        {% if applicants_by_date %}
+          {% set max_count = applicants_by_date|map(attribute='count')|max %}
+          {% for day_data in applicants_by_date %}
+            {% set height = (day_data.count / max_count * 100)|int %}
+            <div class="bar-group"><div class="bar" style="height:{{ height }}%"></div><span class="bar-val">{{ day_data.count }}</span><span class="bar-label">{{ day_data.date.strftime('%b %d') }}</span></div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align: center; width: 100%; padding: 40px; color: var(--gray);">No applicant data yet</div>
+        {% endif %}
       </div>
     </div>
 
@@ -102,61 +104,25 @@
           <span class="card-title">Active Job Postings</span>
           <span class="card-action">+ New Post</span>
         </div>
-        <div class="job-row">
-          <div class="status-dot active"></div>
-          <div class="job-row-info">
-            <div class="jr-title">Senior Frontend Developer</div>
-            <div class="jr-meta">Remote · Full-time · Posted 2 days ago</div>
+        {% if jobs %}
+          {% for job in jobs %}
+            <div class="job-row">
+              <div class="status-dot {% if job.status == 'active' %}active{% elif job.status == 'paused' %}paused{% else %}closed{% endif %}"></div>
+              <div class="job-row-info">
+                <div class="jr-title">{{ job.title }}</div>
+                <div class="jr-meta">{{ job.location }} · {{ job.job_type.title() }} · {% if job.status == 'active' %}Posted {{ (now() - job.created_at).days }} days ago{% else %}{{ job.status.title() }}{% endif %}</div>
+              </div>
+              <div class="jr-stats">
+                <div class="jr-stat"><div class="jr-num">{{ job.applications|length }}</div><div class="jr-lbl">Applicants</div></div>
+                <div class="jr-stat"><div class="jr-num">{{ job.view_count|default(0) }}</div><div class="jr-lbl">Views</div></div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align: center; padding: 40px; color: var(--gray);">
+            <p>No jobs posted yet. <a href="{{ url_for('employer.post_job') }}">Post your first job</a></p>
           </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">42</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">1.2K</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
-        <div class="job-row">
-          <div class="status-dot active"></div>
-          <div class="job-row-info">
-            <div class="jr-title">Backend Engineer (Node.js)</div>
-            <div class="jr-meta">Hybrid · Full-time · Posted 5 days ago</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">28</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">890</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
-        <div class="job-row">
-          <div class="status-dot paused"></div>
-          <div class="job-row-info">
-            <div class="jr-title">DevOps Engineer</div>
-            <div class="jr-meta">On-site · Full-time · Paused</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">15</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">440</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
-        <div class="job-row">
-          <div class="status-dot active"></div>
-          <div class="job-row-info">
-            <div class="jr-title">QA Engineer</div>
-            <div class="jr-meta">Remote · Full-time · Posted 1 week ago</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">21</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">680</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
-        <div class="job-row">
-          <div class="status-dot closed"></div>
-          <div class="job-row-info">
-            <div class="jr-title">Product Manager</div>
-            <div class="jr-meta">Hybrid · Full-time · Closed</div>
-          </div>
-          <div class="jr-stats">
-            <div class="jr-stat"><div class="jr-num">22</div><div class="jr-lbl">Applicants</div></div>
-            <div class="jr-stat"><div class="jr-num">510</div><div class="jr-lbl">Views</div></div>
-          </div>
-        </div>
+        {% endif %}
       </div>
 
       <div class="card">
@@ -164,39 +130,34 @@
           <span class="card-title">Top Applicants</span>
           <span class="card-action">View all</span>
         </div>
-        <div class="app-item">
-          <div class="app-avatar">JD</div>
-          <div class="app-info">
-            <div class="app-name">Juan dela Cruz</div>
-            <div class="app-role">Frontend Dev · 5 yrs exp</div>
+        {% if top_applicants %}
+          {% for applicant in top_applicants %}
+            <div class="app-item">
+              <div class="app-avatar">{{ applicant.user.avatar_initials }}</div>
+              <div class="app-info">
+                <div class="app-name">{{ applicant.user.full_name }}</div>
+                <div class="app-role">
+                  {% if applicant.user.profile and applicant.user.profile.title %}
+                    {{ applicant.user.profile.title }}
+                  {% else %}
+                    Job Seeker
+                  {% endif %}
+                  {% if applicant.user.profile and applicant.user.profile.experience_years %} · {{ applicant.user.profile.experience_years }} yrs exp{% endif %}
+                </div>
+              </div>
+              <div>
+                <span class="score-badge">{{ applicant.match_score|default(0) }}%</span>
+              </div>
+              <div class="action-btns">
+                <a href="{{ url_for('employer.applicant_details', applicant_id=applicant.id) }}" class="btn-sm-green">View</a>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align: center; padding: 40px; color: var(--gray);">
+            <p>No applicants yet</p>
           </div>
-          <div>
-            <span class="score-badge">95%</span>
-          </div>
-          <div class="action-btns">
-            <button class="btn-sm-green">✓</button>
-            <button class="btn-sm-red">✕</button>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-avatar">MS</div>
-          <div class="app-info">
-            <div class="app-name">Maria Santos</div>
-            <div class="app-role">Full-stack Dev · 4 yrs exp</div>
-          </div>
-          <span class="score-badge">88%</span>
-          <div class="action-btns">
-            <button class="btn-sm-green">✓</button>
-            <button class="btn-sm-red">✕</button>
-          </div>
-        </div>
-        <div class="app-item">
-          <div class="app-avatar">RC</div>
-          <div class="app-info">
-            <div class="app-name">Ryan Cruz</div>
-            <div class="app-role">React Dev · 3 yrs exp</div>
-          </div>
-          <span class="score-badge">82%</span>
+        {% endif %}
           <div class="action-btns">
             <button class="btn-sm-green">✓</button>
             <button class="btn-sm-red">✕</button>

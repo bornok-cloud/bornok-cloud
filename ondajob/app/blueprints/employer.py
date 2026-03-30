@@ -3,6 +3,8 @@ from flask_login import login_required, current_user
 from app.extensions import db
 from app.models import Job, Application, Company, User
 from app.blueprints.auth import employer_required
+from datetime import datetime, timedelta
+from sqlalchemy import func
 
 employer_bp = Blueprint("employer", __name__, template_folder="../../templates")
 
@@ -16,8 +18,8 @@ def dashboard():
         .order_by(Job.created_at.desc()).all()
     
     # Calculate analytics
-    total_applicants = sum(j.applications.count() for j in jobs)
-    total_views = sum(j.views_count or 0 for j in jobs)
+    total_applicants = sum(len(j.applications) for j in jobs)
+    total_views = sum(j.view_count or 0 for j in jobs)
     active_jobs = sum(1 for j in jobs if j.status == "active")
     
     # Get application status breakdown
@@ -29,10 +31,26 @@ def dashboard():
         status = app.status
         status_breakdown[status] = status_breakdown.get(status, 0) + 1
     
-    # Recent applicants
-    recent_applicants = Application.query.join(Job)\
+    # Applicants by date (last 7 days)
+    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    applicants_by_date = db.session.query(
+        func.date(Application.created_at).label('date'),
+        func.count(Application.id).label('count')
+    ).join(Job).filter(
+        Job.employer_id == current_user.id,
+        Application.created_at >= seven_days_ago
+    ).group_by(func.date(Application.created_at)).order_by('date').all()
+    
+    # Convert to list of dicts
+    applicants_by_date = [
+        {'date': date, 'count': count} for date, count in applicants_by_date
+    ]
+    
+    # Top applicants (highest match scores)
+    top_applicants = Application.query.join(Job)\
         .filter(Job.employer_id == current_user.id)\
-        .order_by(Application.created_at.desc()).limit(5).all()
+        .order_by(Application.match_score.desc())\
+        .limit(5).all()
     
     return render_template(
         "employer_dashboard.html",
@@ -43,7 +61,9 @@ def dashboard():
         total_views=total_views,
         active_jobs=active_jobs,
         status_breakdown=status_breakdown,
-        recent_applicants=recent_applicants,
+        applicants_by_date=applicants_by_date,
+        top_applicants=top_applicants,
+        now=datetime.utcnow
     )
 
 
