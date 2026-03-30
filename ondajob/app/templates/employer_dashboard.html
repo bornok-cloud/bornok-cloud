@@ -11,18 +11,18 @@
 <aside class="sidebar">
   <div class="sidebar-logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job"></div>
   <div class="sidebar-user">
-    <div class="u-avatar">🏢</div>
+    <div class="u-avatar">{{ company.logo_emoji if company and company.logo_emoji else '🏢' }}</div>
     <div>
-      <div class="u-name">TechCorp Philippines</div>
+      <div class="u-name">{{ company.name if company else 'Company' }}</div>
       <div class="u-sub">Employer Account</div>
     </div>
   </div>
   <div class="nav-section">
     <div class="nsl">Overview</div>
     <a class="nav-item active" href="{{ url_for('employer.dashboard') }}"><span class="nav-icon">🏠</span>Dashboard</a>
-    <a class="nav-item" href="#"><span class="nav-icon">📢</span>Post a Job</a>
-    <a class="nav-item" href="#"><span class="nav-icon">📋</span>Manage Jobs <span class="nav-badge">5</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">👥</span>Applicants <span class="nav-badge">34</span></a>
+    <a class="nav-item" href="{{ url_for('employer.post_job') }}"><span class="nav-icon">📢</span>Post a Job</a>
+    <a class="nav-item" href="{{ url_for('employer.dashboard') }}"><span class="nav-icon">📋</span>Manage Jobs <span class="nav-badge">{{ jobs|length }}</span></a>
+    <a class="nav-item" href="{{ url_for('employer.applicants') }}"><span class="nav-icon">👥</span>Applicants <span class="nav-badge">{{ total_applicants }}</span></a>
   </div>
   <div class="nav-section">
     <div class="nsl">Analytics</div>
@@ -57,20 +57,20 @@
     <!-- STATS -->
     <div class="stats-row">
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-blue">📢</div><span class="trend up">↑ 2</span></div>
-        <div class="stat-num">5</div><div class="stat-label">Active Job Posts</div>
+        <div class="stat-top"><div class="stat-icon si-blue">📢</div></div>
+        <div class="stat-num">{{ jobs|length }}</div><div class="stat-label">Active Job Posts</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-green">👥</div><span class="trend up">↑ 12</span></div>
-        <div class="stat-num">128</div><div class="stat-label">Total Applicants</div>
+        <div class="stat-top"><div class="stat-icon si-green">👥</div></div>
+        <div class="stat-num">{{ total_applicants }}</div><div class="stat-label">Total Applicants</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-orange">📅</div><span class="trend up">↑ 3</span></div>
-        <div class="stat-num">8</div><div class="stat-label">Interviews Scheduled</div>
+        <div class="stat-top"><div class="stat-icon si-orange">📅</div></div>
+        <div class="stat-num">{{ status_breakdown.get('interview', 0) }}</div><div class="stat-label">Interviews Scheduled</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon si-purple">👁</div><span class="trend up">↑ 24%</span></div>
-        <div class="stat-num">3.4K</div><div class="stat-label">Job Views (7 days)</div>
+        <div class="stat-top"><div class="stat-icon si-purple">👁</div></div>
+        <div class="stat-num">{{ total_views|default(0) }}</div><div class="stat-label">Job Views</div>
       </div>
     </div>
 

@@ -15,9 +15,9 @@
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Onda Job">
   </div>
   <div class="sidebar-user">
-    <div class="user-avatar">JD</div>
+    <div class="user-avatar">{{ user.avatar_initials }}</div>
     <div>
-      <div class="user-name">Juan dela Cruz</div>
+      <div class="user-name">{{ user.full_name }}</div>
       <div class="user-role">Job Seeker</div>
     </div>
   </div>
@@ -25,9 +25,9 @@
   <div class="nav-section">
     <div class="nav-section-label">Main</div>
     <a class="nav-item active" href="{{ url_for('jobseeker.dashboard') }}"><span class="nav-icon">🏠</span> Dashboard</a>
-    <a class="nav-item" href="{{ url_for('jobs.search') }}"><span class="nav-icon">🔍</span> Search Jobs <span class="nav-badge">48K</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">📋</span> My Applications <span class="nav-badge">6</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">🔖</span> Saved Jobs</a>
+    <a class="nav-item" href="{{ url_for('jobs.search') }}"><span class="nav-icon">🔍</span> Search Jobs <span class="nav-badge">{{ total_jobs_available }}</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">📋</span> My Applications <span class="nav-badge">{{ user_applications|length }}</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">🔖</span> Saved Jobs <span class="nav-badge">{{ user_saved_jobs|length }}</span></a>
   </div>
 
   <div class="nav-section">
@@ -53,50 +53,49 @@
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <h1>Good morning, Juan! 👋</h1>
-      <p>Thursday, March 5, 2026 · You have 3 new job recommendations</p>
+      <h1>Good {{ 'morning' if now().hour < 12 else 'afternoon' if now().hour < 18 else 'evening' }}, {{ user.first_name }}! 👋</h1>
+      <p>{{ now().strftime('%A, %B %d, %Y') }} · {{ unread_notifications }} unread notifications</p>
     </div>
     <div class="topbar-actions">
       <button class="icon-btn">🔍</button>
-      <button class="icon-btn">🔔<span class="notif-dot"></span></button>
-      <div class="user-avatar" style="width:40px;height:40px;font-size:14px;">JD</div>
+      <button class="icon-btn">🔔<span class="notif-dot" {% if unread_notifications == 0 %}style="display:none"{% endif %}></span></button>
+      <div class="user-avatar" style="width:40px;height:40px;font-size:14px;">{{ user.avatar_initials }}</div>
     </div>
   </div>
 
   <div class="content">
     <!-- PROFILE BANNER -->
-    <div class="profile-banner">
-      <div class="banner-icon">🎯</div>
-      <div class="banner-text">
-        <h3>Your profile is 70% complete</h3>
-        <p>Add your skills and portfolio to get 3x more recruiter views</p>
-        <div class="progress-bar"><div class="progress-fill"></div></div>
+    {% if user_profile %}
+      <div class="profile-banner">
+        <div class="banner-icon">🎯</div>
+        <div class="banner-text">
+          <h3>Your profile is {{ profile_completion_percent }}% complete</h3>
+          <p>Add your skills and portfolio to get 3x more recruiter views</p>
+          <div class="progress-bar"><div class="progress-fill" style="width: {{ profile_completion_percent }}%"></div></div>
+        </div>
+        <a href="{{ url_for('profile.edit_profile') }}" class="banner-btn">Complete Profile</a>
       </div>
-      <button class="banner-btn" onclick="location.href='#'">Complete Profile</button>
-    </div>
+    {% endif %}
 
     <!-- STATS -->
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon blue">📋</div>
-          <span class="stat-change up">↑ 2</span>
         </div>
-        <div class="stat-num">6</div>
+        <div class="stat-num">{{ user_applications|length }}</div>
         <div class="stat-label">Applications Sent</div>
       </div>
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon green">📅</div>
-          <span class="stat-change up">↑ 1</span>
         </div>
-        <div class="stat-num">2</div>
+        <div class="stat-num">{{ user_interviews|length }}</div>
         <div class="stat-label">Interviews Scheduled</div>
       </div>
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon orange">👁</div>
-          <span class="stat-change up">↑ 18%</span>
         </div>
         <div class="stat-num">142</div>
         <div class="stat-label">Profile Views</div>

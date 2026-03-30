@@ -21,20 +21,14 @@
 
 <div class="search-header">
   <h1>Find Your Perfect Job</h1>
-  <p>Search from 48,000+ listings with advanced AI-powered filters</p>
-  <div class="search-bar">
+  <p>Search from {{ total_count }} listings with advanced filters</p>
+  <form method="get" class="search-bar">
     <span>🔍</span>
-    <input type="text" placeholder="Job title, skill, or company name..." id="mainSearch">
+    <input type="text" name="q" placeholder="Job title, skill, or company name..." value="{{ query }}">
     <div class="sb-divider"></div>
-    <select>
-      <option>All Locations</option>
-      <option>Metro Manila</option>
-      <option>Cebu City</option>
-      <option>Davao</option>
-      <option>Remote</option>
-    </select>
-    <button class="sb-btn">Search</button>
-  </div>
+    <input type="text" name="location" placeholder="Location" value="{{ location }}">
+    <button type="submit" class="sb-btn">Search</button>
+  </form>
 </div>
 
 <div class="page-layout">
@@ -45,18 +39,32 @@
 
       <div class="filter-section">
         <div class="filter-section-label">Job Type</div>
-        <div class="checkbox-item"><input type="checkbox" checked id="ft"><label for="ft">Full-time</label><span>28,400</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="pt"><label for="pt">Part-time</label><span>6,200</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="ct"><label for="ct">Contract</label><span>4,800</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="fr"><label for="fr">Freelance</label><span>2,100</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="in"><label for="in">Internship</label><span>1,500</span></div>
+        {% if job_type_counts %}
+          {% for jt, count in job_type_counts.items() %}
+            <div class="checkbox-item">
+              <input type="checkbox" id="jt-{{ jt }}" name="job_type" value="{{ jt }}" {% if job_type == jt %}checked{% endif %}>
+              <label for="jt-{{ jt }}">{{ jt.title() }}</label>
+              <span>{{ count }}</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p style="color: var(--gray); font-size: 13px;">No jobs available</p>
+        {% endif %}
       </div>
 
       <div class="filter-section">
         <div class="filter-section-label">Work Setup</div>
-        <div class="checkbox-item"><input type="checkbox" id="rem"><label for="rem">Remote</label><span>14,600</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="ons"><label for="ons">On-site</label><span>22,000</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="hyb"><label for="hyb">Hybrid</label><span>11,400</span></div>
+        {% if work_setup_counts %}
+          {% for ws, count in work_setup_counts.items() %}
+            <div class="checkbox-item">
+              <input type="checkbox" id="ws-{{ ws }}" name="work_setup" value="{{ ws }}" {% if work_setup == ws %}checked{% endif %}>
+              <label for="ws-{{ ws }}">{{ ws.title() }}</label>
+              <span>{{ count }}</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p style="color: var(--gray); font-size: 13px;">No jobs available</p>
+        {% endif %}
       </div>
 
       <div class="filter-section">
@@ -79,11 +87,17 @@
 
       <div class="filter-section">
         <div class="filter-section-label">Industry</div>
-        <div class="checkbox-item"><input type="checkbox" checked id="tech"><label for="tech">Technology</label><span>8,240</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="fin"><label for="fin">Finance</label><span>4,120</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="hlt"><label for="hlt">Healthcare</label><span>3,890</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="mkt"><label for="mkt">Marketing</label><span>3,450</span></div>
-        <div class="checkbox-item"><input type="checkbox" id="edu"><label for="edu">Education</label><span>2,300</span></div>
+        {% if industry_counts %}
+          {% for ind, count in industry_counts.items() %}
+            <div class="checkbox-item">
+              <input type="checkbox" id="ind-{{ loop.index }}" name="industry" value="{{ ind }}" {% if industry == ind %}checked{% endif %}>
+              <label for="ind-{{ loop.index }}">{{ ind }}</label>
+              <span>{{ count }}</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p style="color: var(--gray); font-size: 13px;">No jobs available</p>
+        {% endif %}
       </div>
 
       <button class="apply-filters" onclick="filterJobs()">Apply Filters</button>
@@ -103,139 +117,110 @@
   <!-- RESULTS -->
   <div class="results-area">
     <div class="results-header">
-      <div class="results-count"><span>48,240</span> jobs found</div>
-      <select class="sort-select">
-        <option>Most Relevant</option>
-        <option>Newest First</option>
-        <option>Highest Salary</option>
-        <option>Most Applied</option>
-      </select>
+      <div class="results-count"><span>{{ total_count }}</span> jobs found</div>
+      <form method="get" style="display: inline;">
+        <select name="sort" class="sort-select" onchange="this.form.submit()">
+          <option value="relevant" {% if sort_by == 'relevant' %}selected{% endif %}>Most Relevant</option>
+          <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest First</option>
+          <option value="salary" {% if sort_by == 'salary' %}selected{% endif %}>Highest Salary</option>
+          <option value="views" {% if sort_by == 'views' %}selected{% endif %}>Most Viewed</option>
+        </select>
+        <input type="hidden" name="q" value="{{ query }}">
+        <input type="hidden" name="location" value="{{ location }}">
+        <input type="hidden" name="job_type" value="{{ job_type }}">
+        <input type="hidden" name="work_setup" value="{{ work_setup }}">
+        <input type="hidden" name="experience_level" value="{{ experience_level }}">
+        <input type="hidden" name="industry" value="{{ industry }}">
+      </form>
     </div>
 
     <div class="active-filters">
-      <span class="active-tag">Full-time <button>×</button></span>
-      <span class="active-tag">Technology <button>×</button></span>
-      <span class="active-tag">Metro Manila <button>×</button></span>
+      {% if query %}<span class="active-tag">{{ query }} <a href="?">×</a></span>{% endif %}
+      {% if location %}<span class="active-tag">{{ location }} <a href="?">×</a></span>{% endif %}
+      {% if job_type %}<span class="active-tag">{{ job_type }} <a href="?">×</a></span>{% endif %}
+      {% if work_setup %}<span class="active-tag">{{ work_setup }} <a href="?">×</a></span>{% endif %}
+      {% if industry %}<span class="active-tag">{{ industry }} <a href="?">×</a></span>{% endif %}
     </div>
 
     <!-- JOB CARDS -->
-    <div class="job-card featured">
-      <div class="co-logo">🏢</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Senior Frontend Developer</h3>
-            <p>TechCorp Philippines · Makati City</p>
+    {% if jobs %}
+      {% for job in jobs %}
+        <div class="job-card {% if job.is_featured %}featured{% endif %}">
+          <div class="co-logo">{{ job.company.logo_emoji if job.company and job.company.logo_emoji else '🏢' }}</div>
+          <div class="job-main">
+            <div class="job-top-row">
+              <div class="job-title-wrap">
+                <h3>{{ job.title }}</h3>
+                <p>{{ job.company.name if job.company else 'Company' }} · {{ job.location }}</p>
+              </div>
+              <div class="job-badges">
+                {% if job.is_featured %}<span class="badge featured">Featured</span>{% endif %}
+                {% if job.is_urgent %}<span class="badge urgent">Urgent</span>{% elif job.created_at > (now() - timedelta(days=1)) %}<span class="badge new">New</span>{% endif %}
+              </div>
+            </div>
+            <div class="job-meta-row">
+              <span class="jmeta">⏰ {{ job.job_type.title() }}</span>
+              <span class="jmeta">📍 {{ job.work_setup.title() }}</span>
+              {% if job.experience_level %}<span class="jmeta">🎓 {{ job.experience_level.title() }}</span>{% endif %}
+              {% if job.company and job.company.employee_count %}<span class="jmeta">👥 {{ job.company.employee_count }}</span>{% endif %}
+            </div>
+            {% if job.skills_required %}
+              <div class="job-tags">
+                {% for skill in job.skills_required.split(',')[:5] %}
+                  <span class="jtag">{{ skill.strip() }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
           </div>
-          <div class="job-badges"><span class="badge featured">Featured</span><span class="badge new">AI 95%</span></div>
+          <div class="job-right">
+            <div>
+              {% if job.salary_min and job.salary_max %}
+                <div class="job-salary">₱{{ '{:,.0f}'.format(job.salary_min) }}–{{ '{:,.0f}'.format(job.salary_max) }}</div>
+              {% else %}
+                <div class="job-salary">Salary TBD</div>
+              {% endif %}
+              <div class="job-posted">{{ (now() - job.created_at).days }} days ago</div>
+            </div>
+            <a href="{{ url_for('jobs.job_details', job_id=job.id) }}" class="apply-btn">View Job</a>
+            <form method="post" action="{{ url_for('jobs.save_job', job_id=job.id) }}" style="display:inline;">
+              <button type="submit" class="save-btn">🔖</button>
+            </form>
+          </div>
         </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 Remote</span>
-          <span class="jmeta">🎓 5+ years</span>
-          <span class="jmeta">👥 500+ employees</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">React.js</span><span class="jtag">TypeScript</span><span class="jtag">Next.js</span><span class="jtag">GraphQL</span>
-        </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align: center; padding: 60px 20px; color: var(--gray);">
+        <p style="font-size: 18px; margin-bottom: 10px;">No jobs found</p>
+        <p>Try adjusting your filters or search terms</p>
       </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱80K–120K</div>
-          <div class="job-posted">2 days ago</div>
-        </div>
-        <button class="apply-btn" onclick="location.href='{{ url_for('jobseeker.dashboard') }}'">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
+    {% endif %}
 
-    <div class="job-card">
-      <div class="co-logo">🚀</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Product Designer (UX/UI)</h3>
-            <p>StartupHub Inc. · BGC, Taguig</p>
-          </div>
-          <div class="job-badges"><span class="badge new">New</span></div>
-        </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 Hybrid</span>
-          <span class="jmeta">🎓 2-3 years</span>
-          <span class="jmeta">👥 100–200</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">Figma</span><span class="jtag">Prototyping</span><span class="jtag">Design Systems</span>
-        </div>
+    <!-- PAGINATION -->
+    {% if pagination.pages > 1 %}
+      <div class="pagination" style="margin-top: 40px; display: flex; gap: 10px; justify-content: center; align-items: center;">
+        {% if pagination.has_prev %}
+          <a href="?page=1&q={{ query }}&location={{ location }}&job_type={{ job_type }}&work_setup={{ work_setup }}&industry={{ industry }}&sort={{ sort_by }}" class="pagination-btn">First</a>
+          <a href="?page={{ pagination.prev_num }}&q={{ query }}&location={{ location }}&job_type={{ job_type }}&work_setup={{ work_setup }}&industry={{ industry }}&sort={{ sort_by }}" class="pagination-btn">Prev</a>
+        {% endif %}
+        
+        {% for page_num in pagination.iter_pages() %}
+          {% if page_num %}
+            {% if page_num == pagination.page %}
+              <span style="padding: 8px 12px; background: var(--blue-primary); color: white; border-radius: 6px;">{{ page_num }}</span>
+            {% else %}
+              <a href="?page={{ page_num }}&q={{ query }}&location={{ location }}&job_type={{ job_type }}&work_setup={{ work_setup }}&industry={{ industry }}&sort={{ sort_by }}" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px;">{{ page_num }}</a>
+            {% endif %}
+          {% else %}
+            <span>...</span>
+          {% endif %}
+        {% endfor %}
+        
+        {% if pagination.has_next %}
+          <a href="?page={{ pagination.next_num }}&q={{ query }}&location={{ location }}&job_type={{ job_type }}&work_setup={{ work_setup }}&industry={{ industry }}&sort={{ sort_by }}" class="pagination-btn">Next</a>
+          <a href="?page={{ pagination.pages }}&q={{ query }}&location={{ location }}&job_type={{ job_type }}&work_setup={{ work_setup }}&industry={{ industry }}&sort={{ sort_by }}" class="pagination-btn">Last</a>
+        {% endif %}
       </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱45K–65K</div>
-          <div class="job-posted">1 day ago</div>
-        </div>
-        <button class="apply-btn">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
-
-    <div class="job-card">
-      <div class="co-logo">💡</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Data Scientist</h3>
-            <p>Analytics PH · Pasig City</p>
-          </div>
-          <div class="job-badges"><span class="badge featured">Featured</span><span class="badge urgent">Urgent</span></div>
-        </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 On-site</span>
-          <span class="jmeta">🎓 3-5 years</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">Python</span><span class="jtag">TensorFlow</span><span class="jtag">SQL</span><span class="jtag">Power BI</span>
-        </div>
-      </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱100K–160K</div>
-          <div class="job-posted">3 days ago</div>
-        </div>
-        <button class="apply-btn">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
-
-    <div class="job-card">
-      <div class="co-logo">📱</div>
-      <div class="job-main">
-        <div class="job-top-row">
-          <div class="job-title-wrap">
-            <h3>Mobile Developer (Flutter)</h3>
-            <p>AppFactory PH · Cebu City</p>
-          </div>
-          <div class="job-badges"><span class="badge new">New</span></div>
-        </div>
-        <div class="job-meta-row">
-          <span class="jmeta">⏰ Full-time</span>
-          <span class="jmeta">📍 Remote</span>
-          <span class="jmeta">🎓 2+ years</span>
-        </div>
-        <div class="job-tags">
-          <span class="jtag">Flutter</span><span class="jtag">Dart</span><span class="jtag">Firebase</span><span class="jtag">REST APIs</span>
-        </div>
-      </div>
-      <div class="job-right">
-        <div>
-          <div class="job-salary">₱60K–90K</div>
-          <div class="job-posted">Today</div>
-        </div>
-        <button class="apply-btn">Apply Now</button>
-        <button class="save-btn">🔖</button>
-      </div>
-    </div>
+    {% endif %}
 
     <div class="job-card">
       <div class="co-logo">☁️</div>

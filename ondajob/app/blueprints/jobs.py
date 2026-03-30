@@ -73,9 +73,21 @@ def search():
     pagination = jobs_query.paginate(page=page, per_page=10, error_out=False)
     total_count = jobs_query.count()
 
-    # Get available filter options
+    # Get available filter options with counts
     industries = db.session.query(Job.industry).filter(Job.industry.isnot(None)).distinct().all()
     industries = [ind[0] for ind in industries if ind[0]]
+    
+    # Calculate counts for each filter (based on current active jobs)
+    base_query = Job.query.filter_by(status="active")
+    
+    job_type_counts = db.session.query(Job.job_type, db.func.count(Job.id)).filter(Job.status == "active").group_by(Job.job_type).all()
+    job_type_counts = {jt: count for jt, count in job_type_counts}
+    
+    work_setup_counts = db.session.query(Job.work_setup, db.func.count(Job.id)).filter(Job.status == "active").group_by(Job.work_setup).all()
+    work_setup_counts = {ws: count for ws, count in work_setup_counts}
+    
+    industry_counts = db.session.query(Job.industry, db.func.count(Job.id)).filter(Job.status == "active", Job.industry.isnot(None)).group_by(Job.industry).all()
+    industry_counts = {ind: count for ind, count in industry_counts}
 
     return render_template(
         "search_jobs.html",
@@ -91,7 +103,10 @@ def search():
         salary_min=salary_min,
         salary_max=salary_max,
         sort_by=sort_by,
-        industries=industries
+        industries=industries,
+        job_type_counts=job_type_counts,
+        work_setup_counts=work_setup_counts,
+        industry_counts=industry_counts
     )
 
 
