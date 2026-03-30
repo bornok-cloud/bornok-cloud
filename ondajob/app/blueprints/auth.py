@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db
 from app.models import User, Profile, Company
 from functools import wraps
@@ -7,6 +7,16 @@ import re
 
 auth_bp = Blueprint("auth", __name__, template_folder="../../templates")
 
+"""
+AUTHENTICATION SECURITY POLICY:
+================================
+1. NO automatic user login based on database existence
+2. EVERY dashboard route MUST have @login_required or role-based decorator
+3. Users MUST provide credentials (email + password) to authenticate
+4. Session protection enabled at LoginManager level
+5. All routes check current_user.is_authenticated before granting access
+6. Role-based decorators enforce permissions after authentication
+"""
 
 # ── Role-based Access Control Decorators ────────────────────
 def jobseeker_required(f):

@@ -5,5 +5,9 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-login_manager.login_view = "auth.login"
-login_manager.login_message_category = "info"
+
+# Security: Configure login manager
+login_manager.login_view = "auth.login"  # Redirect unauthenticated users to login
+login_manager.login_message = "You must be logged in to access this page."
+login_manager.login_message_category = "warning"
+login_manager.session_protection = "strong"  # Prevent session hijacking

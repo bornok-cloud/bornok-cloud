@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models import Application, Job, SavedJob, Profile, Notification, Interview
@@ -10,7 +10,10 @@ jobseeker_bp = Blueprint("jobseeker", __name__, template_folder="../../templates
 @jobseeker_bp.route("/dashboard")
 @login_required
 def dashboard():
-    """Jobseeker dashboard with real data"""
+    """Jobseeker dashboard with real data - Only accessible to authenticated jobseekers"""
+    # Security: Verify user is a jobseeker
+    if current_user.role != "jobseeker":
+        return abort(403)  # Forbidden for non-jobseeker users
     # Get user's applications
     user_applications = Application.query.filter_by(user_id=current_user.id).all()
     
