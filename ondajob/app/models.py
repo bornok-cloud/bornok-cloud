@@ -155,8 +155,20 @@ class Job(db.Model):
         else:
             return f"{diff.days} days ago"
 
+    def applicant_count(self):
+        """Get total number of applicants for this job"""
+        return self.applications.count()
 
-# ── Application ──────────────────────────────────────────────
+    def applicant_count_by_status(self):
+        """Get applicant counts grouped by status"""
+        statuses = {}
+        for app in self.applications:
+            status = app.status
+            statuses[status] = statuses.get(status, 0) + 1
+        return statuses
+
+
+# ── Application ───────────��──────────────────────────────────
 class Application(db.Model):
     __tablename__ = "applications"
 
@@ -207,6 +219,23 @@ class Notification(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref="notifications")
+
+
+# ── Interview ──────────────────────────────────────────────────
+class Interview(db.Model):
+    __tablename__ = "interviews"
+
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey("applications.id"), nullable=False)
+    scheduled_date = db.Column(db.DateTime)
+    interview_type = db.Column(db.String(50))  # phone, video, in-person
+    notes = db.Column(db.Text)
+    feedback = db.Column(db.Text)
+    status = db.Column(db.Enum("scheduled", "completed", "cancelled"), default="scheduled")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    application = db.relationship("Application", backref="interviews")
 
 
 # ── Report (for admin) ──────────────────────────────────────
