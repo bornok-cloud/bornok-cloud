@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models import Message, User
+from datetime import datetime
 
 messages_bp = Blueprint("messages", __name__, template_folder="../../templates")
 
@@ -34,7 +35,7 @@ def inbox():
     
     conversations.sort(key=lambda c: c["last_message"].created_at if c["last_message"] else 0, reverse=True)
     
-    return render_template("messages.html", user=current_user, conversations=conversations)
+    return render_template("messages.html", user=current_user, conversations=conversations, now=datetime.utcnow())
 
 
 @messages_bp.route("/send", methods=["POST"])
